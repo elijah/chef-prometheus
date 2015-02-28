@@ -1,4 +1,4 @@
-prometheus-collectd-exporter Cookbook
+prometheus Cookbook
 =====================
 
 This cookbook installs the [Prometheus][] monitoring system and time-series database.
