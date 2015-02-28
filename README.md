@@ -75,6 +75,6 @@ limitations under the License.
 ```
 
 [build-essential]: https://github.com/opscode-cookbooks/build-essential
-[apt]: https://github.com/opscode-cookbooks/qpt
+[apt]: https://github.com/opscode-cookbooks/apt
 [runit]: https://github.com/hw-cookbooks/runit
 [Prometheus]: https://github.com/prometheus/prometheus
