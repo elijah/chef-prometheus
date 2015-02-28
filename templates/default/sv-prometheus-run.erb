@@ -1,0 +1,12 @@
+#!/bin/sh
+exec 2>&1
+
+<%
+config = ''
+node['prometheus']['flags'].each do |flag_key, flag_value|
+    unless flag_value == ''
+        config = config + "-#{flag_key}=#{flag_value} "
+    end
+end
+%>
+exec <%= node['prometheus']['dir'] %>/prometheus <%= config %>

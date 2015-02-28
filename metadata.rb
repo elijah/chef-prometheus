@@ -7,3 +7,7 @@ description      'Installs/Configures Prometheus'
 long_description 'Installs/Configures prometheus'
 version          '0.1.0'
 # rubocop:enable Style/SingleSpaceBeforeFirstArg
+
+depends 'apt'
+depends 'build-essential'
+depends 'runit', '~> 1.5'
