@@ -1,5 +1,8 @@
 #!/bin/sh
+
 exec 2>&1
+
+export GOMAXPROCS=<%= node['cpu']['total'] %>
 
 <%
 config = ''
