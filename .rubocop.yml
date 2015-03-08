@@ -17,6 +17,8 @@ NumericLiterals:
   Enabled: false
 Style/StringLiterals:
   Enabled: true
-  EnforcedStyle: double_quotes
+  EnforcedStyle: single_quotes
 Metrics/LineLength:
+  Enabled: false
+Style/ExtraSpacing:
   Enabled: false
