@@ -1,8 +1,7 @@
 prometheus Cookbook
 =====================
 [![Build Status](https://travis-ci.org/rayrod2030/chef-prometheus.svg?branch=master)](https://travis-ci.org/rayrod2030/chef-prometheus?branch=master)
-
-[![Join the chat at https://gitter.im/rayrod2030/chef-prometheus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rayrod2030/chef-prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter chat](https://img.shields.io/badge/Gitter-rayrod2030%2Fchef-prometheus-brightgreen.svg)](https://gitter.im/rayrod2030/chef-prometheus)
 
 This cookbook installs the [Prometheus][] monitoring system and time-series database.
 
