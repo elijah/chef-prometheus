@@ -1,6 +1,8 @@
 prometheus Cookbook
 =====================
 
+[![Join the chat at https://gitter.im/rayrod2030/chef-prometheus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rayrod2030/chef-prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This cookbook installs the [Prometheus][] monitoring system and time-series database.
 
 Requirements
