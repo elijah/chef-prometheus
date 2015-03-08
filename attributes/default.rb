@@ -10,7 +10,7 @@ default['prometheus']['dir']                                                    
 default['prometheus']['install_method']                                                   = 'source'
 
 # Prometheus version to build
-default['prometheus']['source']['version']                                                = '0.11.1'
+default['prometheus']['source']['version']                                                = '0.12.0'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
