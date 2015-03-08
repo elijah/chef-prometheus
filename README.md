@@ -1,5 +1,6 @@
 prometheus Cookbook
 =====================
+[![Build Status](https://travis-ci.org/rayrod2030/chef-prometheus.svg?branch=master)](https://travis-ci.org/rayrod2030/chef-prometheus?branch=master)
 
 This cookbook installs the [Prometheus][] monitoring system and time-series database.
 
