@@ -15,3 +15,8 @@ MethodLength:
   Enabled: false
 NumericLiterals:
   Enabled: false
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+Metrics/LineLength:
+  Enabled: false
