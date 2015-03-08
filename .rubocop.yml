@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - vendor/**
+    - .kitchen/**
 
 ClassLength:
   Enabled: false
