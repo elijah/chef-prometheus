@@ -1,0 +1,14 @@
+rvm:
+  - 2.1
+  - 2.2
+
+bundler_args: --without development integration kitchen_docker kitchen_vagrant kitchen_cloud
+
+env:
+  - USE_SYSTEM_GECODE=1
+
+before_install:
+  - sudo apt-get -y -qq install libgecode-dev
+
+script:
+  - bundle exec rake travis:ci
