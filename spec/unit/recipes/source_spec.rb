@@ -4,6 +4,7 @@ describe 'prometheus::source' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
       node.set['root_group'] = 'root'
+      node.set['prometheus']['source']['version'] = '0.11.1'
     end.converge(described_recipe)
   end
 
@@ -53,9 +54,4 @@ describe 'prometheus::source' do
   it 'enables runit_service' do
     expect(chef_run).to enable_runit_service('prometheus')
   end
-
-  it 'prometheus service does nothing' do
-    expect(chef_run.service('prometheus')).to do_nothing
-  end
-
 end
