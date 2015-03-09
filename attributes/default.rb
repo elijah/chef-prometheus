@@ -13,7 +13,7 @@ default['prometheus']['install_method']                                         
 default['prometheus']['init_style']                                                       = 'runit'
 
 # Prometheus version to build
-default['prometheus']['source']['version']                                                = '0.11.1'
+default['prometheus']['source']['version']                                                = '0.12.0'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
@@ -33,6 +33,14 @@ default['prometheus']['source']['use_existing_user']                            
 
 # Location for Prometheus pre-compiiled binary.
 default['prometheus']['binary']['url']                                                    = ''
+
+# Prometheus job configuration chef template name.
+default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
+
+# Prometheus custom configuration cookbook.  Use this if you'd like to bypass the
+# default prometheus cookbook job configuration template and implement your own
+# templates and recipes to configure Prometheus jobs.
+default['prometheus']['job_config_cookbook_name']                                         = 'prometheus'
 
 # FLAGS Section: Any attributes defined under the flags hash will be used to
 # generate the command line flags for the Prometheus executable.

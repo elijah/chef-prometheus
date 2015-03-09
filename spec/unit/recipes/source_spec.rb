@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'prometheus::source' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
-      node.set['root_group'] = 'root'
+      node.set['prometheus']['source']['version'] = '0.12.0'
     end.converge(described_recipe)
   end
 
@@ -21,8 +21,8 @@ describe 'prometheus::source' do
 
   it 'creates a directory at /opt/prometheus' do
     expect(chef_run).to create_directory('/opt/prometheus').with(
-      owner: 'root',
-      group: 'root',
+      owner: 'prometheus',
+      group: 'prometheus',
       mode: '0755',
       recursive: true
     )
@@ -35,9 +35,9 @@ describe 'prometheus::source' do
   end
 
   it 'checks out prometheus from github' do
-    expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-0.11.1").with(
+    expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-0.12.0").with(
       repository: 'https://github.com/prometheus/prometheus.git',
-      revision: '0.11.1'
+      revision: '0.12.0'
     )
   end
 
@@ -45,11 +45,16 @@ describe 'prometheus::source' do
     expect(chef_run).to run_bash('compile_prometheus_source')
   end
 
-  it 'notfies prometheus to restart' do
+  it 'notifies prometheus to restart' do
     resource = chef_run.bash('compile_prometheus_source')
     expect(resource).to notify('service[prometheus]').to(:restart)
   end
 
+  it 'renders a prometheus job configuration file and notifies prometheus to restart' do
+    resource = chef_run.template('/opt/prometheus/prometheus.conf')
+    expect(chef_run).to render_file('/opt/prometheus/prometheus.conf').with_content(start_with('# Global default settings.'))
+    expect(resource).to notify('service[prometheus]').to(:restart)
+  end
 
   context 'runit' do
     let(:chef_run) do
@@ -78,12 +83,9 @@ describe 'prometheus::source' do
       expect(chef_run).to include_recipe('bluepill::default')
     end
 
-    it 'makes configuration file for bluepill' do
+    it 'renders a bluepill configuration file' do
       expect(chef_run).to render_file("#{chef_run.node['bluepill']['conf_dir']}/prometheus.pill")
     end
-
-    it 'enables runit_service' do
-      expect(chef_run).to load_command('prometheus')
-    end
   end
+
 end

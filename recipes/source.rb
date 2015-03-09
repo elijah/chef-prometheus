@@ -19,7 +19,15 @@
 
 include_recipe 'build-essential::default'
 
-user node['prometheus']['source']['user'] do
+if node['prometheus']['source']['use_existing_user'] == false
+  prometheus_user = node['prometheus']['source']['user']
+  prometheus_group = node['prometheus']['source']['group']
+else
+  prometheus_user = 'root'
+  prometheus_group = node['root_group']
+end
+
+user prometheus_user do
   system true
   shell '/bin/false'
   home node['prometheus']['dir']
@@ -27,8 +35,8 @@ user node['prometheus']['source']['user'] do
 end
 
 directory node['prometheus']['dir'] do
-  owner 'root'
-  group node['root_group']
+  owner prometheus_user
+  group prometheus_group
   mode '0755'
   recursive true
 end
@@ -49,7 +57,6 @@ bash 'compile_prometheus_source' do
   code <<-EOH
     make build &&
     cp -R prometheus #{node['prometheus']['dir']} &&
-    cp -R documentation/examples/prometheus.conf #{node['prometheus']['dir']} &&
     cp -R console_libraries #{node['prometheus']['dir']} &&
     cp -R consoles #{node['prometheus']['dir']}
   EOH
@@ -58,6 +65,15 @@ bash 'compile_prometheus_source' do
     File.exist?("#{node['prometheus']['dir']}/prometheus")
   end
 
+  notifies :restart, 'service[prometheus]'
+end
+
+template node['prometheus']['flags']['config.file'] do
+  cookbook node['prometheus']['job_config_cookbook_name']
+  source node['prometheus']['job_config_template_name']
+  mode 0644
+  owner prometheus_user
+  group prometheus_group
   notifies :restart, 'service[prometheus]'
 end
 
