@@ -72,7 +72,7 @@ describe 'prometheus::source' do
     end
   end
 
-  context 'bluebill' do
+  context 'bluepill' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new do |node|
         node.set['prometheus']['init_style'] = 'bluepill'
