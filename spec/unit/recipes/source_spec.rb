@@ -50,12 +50,40 @@ describe 'prometheus::source' do
     expect(resource).to notify('service[prometheus]').to(:restart)
   end
 
-  it 'enables runit_service' do
-    expect(chef_run).to enable_runit_service('prometheus')
+
+  context 'runit' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new do |node|
+        node.set['prometheus']['init_style'] = 'runit'
+      end.converge(described_recipe)
+    end
+
+    it 'includes runit::default recipe' do
+      expect(chef_run).to include_recipe('runit::default')
+    end
+
+    it 'enables runit_service' do
+      expect(chef_run).to enable_runit_service('prometheus')
+    end
   end
 
-  it 'prometheus service does nothing' do
-    expect(chef_run.service('prometheus')).to do_nothing
-  end
+  context 'bluebill' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new do |node|
+        node.set['prometheus']['init_style'] = 'bluepill'
+      end.converge(described_recipe)
+    end
 
+    it 'includes bluepill::default recipe' do
+      expect(chef_run).to include_recipe('bluepill::default')
+    end
+
+    it 'makes configuration file for bluepill' do
+      expect(chef_run).to render_file("#{chef_run.node['bluepill']['conf_dir']}/prometheus.pill")
+    end
+
+    it 'enables runit_service' do
+      expect(chef_run).to load_command('prometheus')
+    end
+  end
 end
