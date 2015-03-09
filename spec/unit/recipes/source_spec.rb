@@ -87,5 +87,4 @@ describe 'prometheus::source' do
       expect(chef_run).to render_file("#{chef_run.node['bluepill']['conf_dir']}/prometheus.pill")
     end
   end
-
 end
