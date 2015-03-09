@@ -37,6 +37,7 @@ The following cookbooks are dependencies:
 * [build-essential][]
 * [apt][]
 * [runit][]
+* [bluepill][]
 
 
 ## Usage
@@ -80,3 +81,4 @@ limitations under the License.
 [apt]: https://github.com/opscode-cookbooks/apt
 [runit]: https://github.com/hw-cookbooks/runit
 [Prometheus]: https://github.com/prometheus/prometheus
+[bluepill]: https://github.com/opscode-cookbooks/bluepill

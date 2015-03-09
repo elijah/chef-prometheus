@@ -9,7 +9,7 @@ default['prometheus']['dir']                                                    
 # Install method.  Currently supports source and binary.
 default['prometheus']['install_method']                                                   = 'source'
 
-# Which init style to use. 'runit' or 'bluepill'
+# Init style. Currently supports runit or bluepill
 default['prometheus']['init_style']                                                       = 'runit'
 
 # Prometheus version to build
