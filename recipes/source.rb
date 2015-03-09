@@ -61,7 +61,22 @@ bash 'compile_prometheus_source' do
   notifies :restart, 'service[prometheus]'
 end
 
-runit_service 'prometheus'
+case node['prometheus']['init_style']
+when 'runit'
+  include_recipe 'runit::default'
+  runit_service 'prometheus'
+
+when 'bluepill'
+  include_recipe 'bluepill::default'
+
+  template "#{node['bluepill']['conf_dir']}/prometheus.pill" do
+    source 'prometheus.pill.erb'
+  end
+
+  bluepill_service 'prometheus' do
+    action [:enable, :load]
+  end
+end
 
 # rubocop:disable Style/HashSyntax
 service 'prometheus' do

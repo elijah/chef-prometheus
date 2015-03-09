@@ -1,0 +1,17 @@
+<%
+config = ''
+node['prometheus']['flags'].each do |flag_key, flag_value|
+  unless flag_value == ''
+    config = config + "-#{flag_key}=#{flag_value} "
+  end
+end
+%>
+
+Bluepill.application('prometheus') do |app|
+  app.process('prometheus') do |process|
+    process.pid_file = "/var/run/prometheus.pid"
+    process.working_dir = "<%= node['prometheus']['dir'] %>"
+    process.start_command = "<%= node['prometheus']['dir'] %>/prometheus <%= config %>"
+    process.daemonize = true
+  end
+end

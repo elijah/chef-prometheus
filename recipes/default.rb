@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe 'runit::default'
-
 include_recipe "prometheus::#{node['prometheus']['install_method']}"
 
 # rubocop:disable Style/HashSyntax
