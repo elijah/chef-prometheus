@@ -1,5 +1,6 @@
 
-Bluepill.application('prometheus') do |app|
+Bluepill.application('prometheus', :log_file => "/var/log/prometheus/prometheus.log") do |app|
+) do |app|
   app.process('prometheus') do |process|
     process.pid_file = "/var/run/prometheus.pid"
     process.working_dir = "<%= node['prometheus']['dir'] %>"
