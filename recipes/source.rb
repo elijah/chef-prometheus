@@ -77,7 +77,9 @@ template node['prometheus']['flags']['config.file'] do
   notifies :restart, 'service[prometheus]'
 end
 
-runit_service 'prometheus'
+runit_service 'prometheus' do
+  default_logger true
+end
 
 # rubocop:disable Style/HashSyntax
 service 'prometheus' do
