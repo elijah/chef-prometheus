@@ -12,6 +12,9 @@ default['prometheus']['install_method']                                         
 # Init style. Currently supports runit or bluepill
 default['prometheus']['init_style']                                                       = 'runit'
 
+# Location for Prometheus logs
+default['prometheus']['log_dir']                                                         = '/var/log/prometheus'
+
 # Prometheus version to build
 default['prometheus']['source']['version']                                                = '0.12.0'
 

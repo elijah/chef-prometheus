@@ -77,6 +77,13 @@ template node['prometheus']['flags']['config.file'] do
   notifies :restart, 'service[prometheus]'
 end
 
+directory node['prometheus']['log_dir'] do
+  owner prometheus_user
+  group prometheus_group
+  mode '0755'
+  recursive true
+end
+
 case node['prometheus']['init_style']
 when 'runit'
   include_recipe 'runit::default'
@@ -90,6 +97,7 @@ when 'bluepill'
 
   template "#{node['bluepill']['conf_dir']}/prometheus.pill" do
     source 'prometheus.pill.erb'
+    mode 0644
   end
 
   bluepill_service 'prometheus' do
