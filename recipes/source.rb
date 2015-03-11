@@ -77,8 +77,32 @@ template node['prometheus']['flags']['config.file'] do
   notifies :restart, 'service[prometheus]'
 end
 
-runit_service 'prometheus' do
-  default_logger true
+directory node['prometheus']['log_dir'] do
+  owner prometheus_user
+  group prometheus_group
+  mode '0755'
+  recursive true
+end
+
+case node['prometheus']['init_style']
+when 'runit'
+  include_recipe 'runit::default'
+
+  runit_service 'prometheus' do
+    default_logger true
+  end
+
+when 'bluepill'
+  include_recipe 'bluepill::default'
+
+  template "#{node['bluepill']['conf_dir']}/prometheus.pill" do
+    source 'prometheus.pill.erb'
+    mode 0644
+  end
+
+  bluepill_service 'prometheus' do
+    action [:enable, :load]
+  end
 end
 
 # rubocop:disable Style/HashSyntax
