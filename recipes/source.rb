@@ -105,9 +105,9 @@ when 'bluepill'
 else
   template '/etc/init.d/prometheus' do
     source "#{node['platform']}/prometheus.erb"
-    owner  'root'
-    group  node['root_group']
-    mode   '0755'
+    owner 'root'
+    group node['root_group']
+    mode '0755'
     notifies :restart, 'service[prometheus]', :delayed
   end
 end
