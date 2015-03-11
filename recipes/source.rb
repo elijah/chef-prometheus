@@ -80,7 +80,10 @@ end
 case node['prometheus']['init_style']
 when 'runit'
   include_recipe 'runit::default'
-  runit_service 'prometheus'
+
+  runit_service 'prometheus' do
+    default_logger true
+  end
 
 when 'bluepill'
   include_recipe 'bluepill::default'
