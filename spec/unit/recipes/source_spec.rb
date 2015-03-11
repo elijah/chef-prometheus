@@ -87,4 +87,16 @@ describe 'prometheus::source' do
       expect(chef_run).to render_file("#{chef_run.node['bluepill']['conf_dir']}/prometheus.pill")
     end
   end
+
+  context 'init' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new do |node|
+        node.set['prometheus']['init_style'] = 'init'
+      end.converge(described_recipe)
+    end
+
+    it 'renders an init.d configuration file' do
+      expect(chef_run).to render_file('/etc/init.d/prometheus')
+    end
+  end
 end
