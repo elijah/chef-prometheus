@@ -18,10 +18,3 @@
 #
 
 include_recipe "prometheus::#{node['prometheus']['install_method']}"
-
-# rubocop:disable Style/HashSyntax
-service 'prometheus' do
-  supports :restart => true
-  action :start
-end
-# rubocop:enable Style/HashSyntax

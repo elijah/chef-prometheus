@@ -6,6 +6,12 @@
 # Directory where the prometheus binary will be installed
 default['prometheus']['dir']                                                              = '/opt/prometheus'
 
+# Location of Prometheus binary
+default['prometheus']['binary']                                                           = "#{node['prometheus']['dir']}/prometheus"
+
+# Location of Prometheus pid file
+default['prometheus']['pid']                                                              = '/var/run/prometheus.pid'
+
 # Install method.  Currently supports source and binary.
 default['prometheus']['install_method']                                                   = 'source'
 
@@ -35,7 +41,7 @@ default['prometheus']['source']['group']                                        
 default['prometheus']['source']['use_existing_user']                                      = false
 
 # Location for Prometheus pre-compiiled binary.
-default['prometheus']['binary']['url']                                                    = ''
+default['prometheus']['binary_url']                                                       = ''
 
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'

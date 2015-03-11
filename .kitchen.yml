@@ -16,3 +16,19 @@ suites:
     run_list:
         - recipe[prometheus::default]
     attributes:
+
+  - name: init
+    run_list:
+        - recipe[prometheus::default]
+    attributes:
+      prometheus:
+        init_style: 'init'
+        flags:
+          storage.remote.timeout: 45s
+
+  - name: bluepill
+    run_list:
+        - recipe[prometheus::default]
+    attributes:
+      prometheus:
+        init_style: 'bluepill'

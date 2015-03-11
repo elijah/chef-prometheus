@@ -91,7 +91,6 @@ when 'runit'
   runit_service 'prometheus' do
     default_logger true
   end
-
 when 'bluepill'
   include_recipe 'bluepill::default'
 
@@ -103,10 +102,18 @@ when 'bluepill'
   bluepill_service 'prometheus' do
     action [:enable, :load]
   end
+else
+  template '/etc/init.d/prometheus' do
+    source "#{node['platform']}/prometheus.erb"
+    owner 'root'
+    group node['root_group']
+    mode '0755'
+    notifies :restart, 'service[prometheus]', :delayed
+  end
 end
 
 # rubocop:disable Style/HashSyntax
 service 'prometheus' do
-  supports :restart => true
+  supports :status => true, :restart => true
 end
 # rubocop:enable Style/HashSyntax
