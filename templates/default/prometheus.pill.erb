@@ -1,9 +1,9 @@
 
 Bluepill.application('prometheus') do |app|
   app.process('prometheus') do |process|
-    process.pid_file = "/var/run/prometheus.pid"
+    process.pid_file = "<%= node['prometheus']['pid'] %>"
     process.working_dir = "<%= node['prometheus']['dir'] %>"
-    process.start_command = "<%= node['prometheus']['dir'] %>/prometheus <%= generate_flags %>"
+    process.start_command = "<%= node['prometheus']['binary'] %> <%= generate_flags %>"
     process.environment = {'GOMAXPROCS' => <%= node['cpu']['total'] %>}
     process.stdout = process.stderr = "<%= node['prometheus']['log_dir'] %>/prometheus.log"
     process.daemonize = true
