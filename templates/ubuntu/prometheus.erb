@@ -18,15 +18,6 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 export PATH
 
-<%
-config = ''
-node['prometheus']['flags'].each do |flag_key, flag_value|
-    unless flag_value == ''
-        config = config + "-#{flag_key}=#{flag_value} "
-    end
-end
-%>
-
 name=prometheus
 program="<%= node['prometheus']['binary'] %>"
 args="<%= generate_flags %>"
