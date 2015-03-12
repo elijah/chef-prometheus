@@ -1,6 +1,6 @@
 prometheus Cookbook
 =====================
-[![Cookbook](http://img.shields.io/cookbook/v/chef-prometheus.svg)](https://github.com/rayrod2030/chef-prometheus)
+[![Cookbook](http://img.shields.io/cookbook/v/prometheus.svg)](https://github.com/rayrod2030/chef-prometheus)
 [![Build Status](https://travis-ci.org/rayrod2030/chef-prometheus.svg?branch=master)](https://travis-ci.org/rayrod2030/chef-prometheus?branch=master)
 [![Gitter chat](https://img.shields.io/badge/Gitter-rayrod2030%2Fchef--prometheus-brightgreen.svg)](https://gitter.im/rayrod2030/chef-prometheus)
 
