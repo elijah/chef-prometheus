@@ -1,5 +1,6 @@
 prometheus Cookbook
 =====================
+[![Cookbook](http://img.shields.io/cookbook/v/chef-prometheus.svg)](https://github.com/rayrod2030/chef-prometheus)
 [![Build Status](https://travis-ci.org/rayrod2030/chef-prometheus.svg?branch=master)](https://travis-ci.org/rayrod2030/chef-prometheus?branch=master)
 [![Gitter chat](https://img.shields.io/badge/Gitter-rayrod2030%2Fchef--prometheus-brightgreen.svg)](https://gitter.im/rayrod2030/chef-prometheus)
 
@@ -62,6 +63,7 @@ License & Authors
 ------
 
 - Author: Ray Rodriguez <rayrod2030@gmail.com>
+- Author: kristian järvenpää <kristian.jarvenpaa@gmail.com>
 
 ```text
 Licensed under the Apache License, Version 2.0 (the “License”);
