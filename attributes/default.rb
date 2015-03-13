@@ -32,13 +32,13 @@ default['prometheus']['source']['git_repository']                               
 default['prometheus']['source']['git_revision']                                           = node['prometheus']['source']['version']
 
 # System user to use
-default['prometheus']['source']['user']                                                   = 'prometheus'
+default['prometheus']['user']                                                             = 'prometheus'
 
 # System group to use
-default['prometheus']['source']['group']                                                  = 'prometheus'
+default['prometheus']['group']                                                            = 'prometheus'
 
 # Set if you want ot use the root user
-default['prometheus']['source']['use_existing_user']                                      = false
+default['prometheus']['use_existing_user']                                                = false
 
 # Location for Prometheus pre-compiiled binary.
 default['prometheus']['binary_url']                                                       = ''

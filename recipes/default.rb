@@ -18,3 +18,29 @@
 #
 
 include_recipe "prometheus::#{node['prometheus']['install_method']}"
+
+# -- Write our Config -- #
+
+template node['prometheus']['flags']['config.file'] do
+  action    :nothing
+  cookbook  node['prometheus']['job_config_cookbook_name']
+  source    node['prometheus']['job_config_template_name']
+  mode      0644
+  owner     node['prometheus']['user']
+  group     node['prometheus']['group']
+  notifies  :restart, 'service[prometheus]'
+end
+
+# monitor our server instance
+prometheus_job "prometheus" do
+  scrape_interval   "15s"
+  target            "http://localhost:#{node['prometheus']['flags']['web.listen-address']}#{node['prometheus']['flags']['web.telemetry-path']}"
+end
+
+accumulator node['prometheus']['flags']['config.file'] do
+  filter        { |res| res.is_a? Chef::Resource::PrometheusJob }
+  target        :template => node['prometheus']['flags']['config.file']
+  transform     { |jobs| jobs.sort_by { |j| j.name } }
+  variable_name :jobs
+  notifies :restart, "service[prometheus]"
+end
