@@ -11,13 +11,19 @@ global {
 job: {
   name: "<%= job.name %>",
   <% if job.scrape_interval %>
-  scrape_interval: "<%= job.scrape_interval %>",
+  scrape_interval: "<%= job.scrape_interval %>"
+  <% end %>
+  <% if job.scrape_timeout %>
+  scrape_timeout: "<%= job.scrape_timeout %>"
   <% end %>
   <% if job.sd_name %>
   sd_name: "<%= job.sd_name %>"
+  <% if job.sd_refresh_interval %>sd_refresh_interval: "<%= job.sd_refresh_interval %>"<% end %>
   <% else %>
   target_group: {
-    <%= [job.target].flatten().collect { |t| %Q!target: "#{t}"! }.join(",\n") %>
+    <% for t in [job.target].flatten() %>
+    target: "<%= t %>"
+    <% end %>
   }
   <% end %>
 }
