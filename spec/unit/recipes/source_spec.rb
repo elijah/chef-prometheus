@@ -99,4 +99,16 @@ describe 'prometheus::source' do
       expect(chef_run).to render_file('/etc/init.d/prometheus')
     end
   end
+
+  context 'systemd' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new do |node|
+        node.set['prometheus']['init_style'] = 'systemd'
+      end.converge(described_recipe)
+    end
+
+    it 'renders a systemd service file' do
+      expect(chef_run).to render_file('/etc/systemd/system/prometheus.service')
+    end
+  end
 end

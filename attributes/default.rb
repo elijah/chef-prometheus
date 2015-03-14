@@ -18,15 +18,19 @@ default['prometheus']['install_method']                                         
 # Init style.
 case node['platform_family']
 when 'debian'
-  default['prometheus']['init_style']                                                       = 'runit'
+  default['prometheus']['init_style']                                                     = 'runit'
 when 'rhel', 'fedora'
-  default['prometheus']['init_style']                                                       = 'init'
+  if node['platform_version'].to_i >= 7
+    default['prometheus']['init_style']                                                   = 'systemd'
+  else
+    default['prometheus']['init_style']                                                   = 'init'
+  end
 else
-  default['prometheus']['init_style']                                                       = 'init'
+  default['prometheus']['init_style']                                                     = 'init'
 end
 
 # Location for Prometheus logs
-default['prometheus']['log_dir']                                                         = '/var/log/prometheus'
+default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
 default['prometheus']['source']['version']                                                = '0.12.0'

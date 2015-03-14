@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus
+After=network.target auditd.service
+
+[Service]
+Type=simple
+EnvironmentFile=<%= @sysconfig_file %>
+User=<%= node['prometheus']['source']['user'] %>
+Group=<%= node['prometheus']['source']['group'] %>
+ExecStart=<%= node['prometheus']['dir'] %>/prometheus <%= generate_flags %>
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

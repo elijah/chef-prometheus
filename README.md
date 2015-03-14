@@ -16,6 +16,10 @@ Platform
 Tested on
 
 * Ubuntu 14.04
+* Ubuntu 12.04
+* Debian 7.7
+* Centos 6.6
+* Centos 7.0
 
 Attributes
 ----------
