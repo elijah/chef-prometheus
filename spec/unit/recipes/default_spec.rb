@@ -25,10 +25,10 @@ describe 'prometheus::default' do
 
   it 'creates a directory at /var/log/prometheus' do
     expect(chef_run).to create_directory('/var/log/prometheus').with(
-    owner: 'prometheus',
-    group: 'prometheus',
-    mode: '0755',
-    recursive: true
+      owner: 'prometheus',
+      group: 'prometheus',
+      mode: '0755',
+      recursive: true
     )
   end
 
@@ -59,9 +59,9 @@ describe 'prometheus::default' do
     end
 
     it 'checks out prometheus from github' do
-      expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-0.12.0").with(
-      repository: 'https://github.com/prometheus/prometheus.git',
-      revision: '0.12.0'
+        expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-0.12.0").with(
+        repository: 'https://github.com/prometheus/prometheus.git',
+        revision: '0.12.0'
       )
     end
 
