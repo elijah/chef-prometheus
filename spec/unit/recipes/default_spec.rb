@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe 'prometheus::default' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
-      node.set['prometheus']['source']['version'] = '0.12.0'
+    ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do
     end.converge(described_recipe)
   end
 
