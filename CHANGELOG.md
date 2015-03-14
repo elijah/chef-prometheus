@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
+### Added
+- Default init style per platform
 
 ## [0.4.0] - 2015-05-12
 ### Fixed

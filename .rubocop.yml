@@ -22,3 +22,5 @@ Metrics/LineLength:
   Enabled: false
 Style/ExtraSpacing:
   Enabled: false
+Style/SingleSpaceBeforeFirstArg:
+  Enabled: false

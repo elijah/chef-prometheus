@@ -15,8 +15,15 @@ default['prometheus']['pid']                                                    
 # Install method.  Currently supports source and binary.
 default['prometheus']['install_method']                                                   = 'source'
 
-# Init style. Currently supports runit or bluepill
-default['prometheus']['init_style']                                                       = 'runit'
+# Init style.
+case node['platform_family']
+when 'debian'
+  default['prometheus']['init_style']                                                       = 'runit'
+when 'rhel', 'fedora'
+  default['prometheus']['init_style']                                                       = 'init'
+else
+  default['prometheus']['init_style']                                                       = 'init'
+end
 
 # Location for Prometheus logs
 default['prometheus']['log_dir']                                                         = '/var/log/prometheus'
