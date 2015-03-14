@@ -20,7 +20,7 @@ user node['prometheus']['user'] do
   system true
   shell '/bin/false'
   home node['prometheus']['dir']
-  not_if { node['prometheus']['use_existing_user'] == true || node['prometheus']['user'] == "root" }
+  not_if { node['prometheus']['use_existing_user'] == true || node['prometheus']['user'] == 'root' }
 end
 
 directory node['prometheus']['dir'] do
@@ -48,4 +48,4 @@ end
 
 include_recipe "prometheus::#{node['prometheus']['install_method']}"
 
-include_recipe "prometheus::init"
+include_recipe 'prometheus::init'

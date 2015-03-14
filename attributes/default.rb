@@ -42,11 +42,11 @@ default['prometheus']['use_existing_user']                                      
 
 # Location for Prometheus pre-compiiled binary.
 # Default for testing purposes
-default['prometheus']['binary_url']                                                       = "http://sourceforge.net/projects/prometheusbinary/files/latest/download"
+default['prometheus']['binary_url']                                                       = 'http://sourceforge.net/projects/prometheusbinary/files/latest/download'
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['checksum']                                                         = "bab949c3f0cab1557b6aa84ae1c4d9cf7daa09f3c063f7d3fae6fcea12678c0b"
+default['prometheus']['checksum']                                                         = 'bab949c3f0cab1557b6aa84ae1c4d9cf7daa09f3c063f7d3fae6fcea12678c0b'
 
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
