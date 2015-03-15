@@ -117,6 +117,7 @@ describe 'prometheus::default' do
         expect(chef_run).to render_file('/etc/init.d/prometheus')
       end
     end
+
     context 'systemd' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
@@ -195,6 +196,7 @@ describe 'prometheus::default' do
         expect(chef_run).to render_file('/etc/init.d/prometheus')
       end
     end
+
     context 'systemd' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
