@@ -16,5 +16,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+user node['prometheus']['user'] do
+  system true
+  shell '/bin/false'
+  home node['prometheus']['dir']
+  not_if { node['prometheus']['use_existing_user'] == true || node['prometheus']['user'] == 'root' }
+end
+
+directory node['prometheus']['dir'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
+directory node['prometheus']['log_dir'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
+template node['prometheus']['flags']['config.file'] do
+  cookbook node['prometheus']['job_config_cookbook_name']
+  source node['prometheus']['job_config_template_name']
+  mode 0644
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  notifies :restart, 'service[prometheus]'
+end
 
 include_recipe "prometheus::#{node['prometheus']['install_method']}"
+
+include_recipe 'prometheus::service'

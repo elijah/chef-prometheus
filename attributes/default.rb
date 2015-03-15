@@ -33,7 +33,7 @@ end
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
-default['prometheus']['source']['version']                                                = '0.12.0'
+default['prometheus']['version']                                                          = '0.12.0'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
@@ -43,16 +43,21 @@ default['prometheus']['source']['git_repository']                               
 default['prometheus']['source']['git_revision']                                           = node['prometheus']['source']['version']
 
 # System user to use
-default['prometheus']['source']['user']                                                   = 'prometheus'
+default['prometheus']['user']                                                             = 'prometheus'
 
 # System group to use
-default['prometheus']['source']['group']                                                  = 'prometheus'
+default['prometheus']['group']                                                            = 'prometheus'
 
 # Set if you want ot use the root user
-default['prometheus']['source']['use_existing_user']                                      = false
+default['prometheus']['use_existing_user']                                                = false
 
 # Location for Prometheus pre-compiiled binary.
-default['prometheus']['binary_url']                                                       = ''
+# Default for testing purposes
+default['prometheus']['binary_url']                                                       = 'http://sourceforge.net/projects/prometheusbinary/files/latest/download'
+
+# Checksum for pre-compiled binary
+# Default for testing purposes
+default['prometheus']['checksum']                                                         = 'bab949c3f0cab1557b6aa84ae1c4d9cf7daa09f3c063f7d3fae6fcea12678c0b'
 
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'

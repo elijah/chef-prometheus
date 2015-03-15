@@ -2,4 +2,4 @@
 
 exec 2>&1
 export GOMAXPROCS=<%= node['cpu']['total'] %>
-exec <%= node['prometheus']['dir'] %>/prometheus <%= generate_flags %>
+exec <%= node['prometheus']['binary'] %> <%= generate_flags %>
