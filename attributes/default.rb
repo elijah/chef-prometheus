@@ -58,8 +58,6 @@ default['prometheus']['checksum']                                               
 # File extension of downloaded tar file
 default['prometheus']['file_extension']                                                   = 'tar.bz2'
 
-default['prometheus']['binary']
-
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
 
