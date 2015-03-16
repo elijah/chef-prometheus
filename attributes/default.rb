@@ -55,6 +55,11 @@ default['prometheus']['binary_url']                                             
 # Default for testing purposes
 default['prometheus']['checksum']                                                         = 'bab949c3f0cab1557b6aa84ae1c4d9cf7daa09f3c063f7d3fae6fcea12678c0b'
 
+# File extension of downloaded tar file
+default['prometheus']['file_extension']                                                   = 'tar.bz2'
+
+default['prometheus']['binary']
+
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
 
