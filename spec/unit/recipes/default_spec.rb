@@ -146,11 +146,12 @@ describe 'prometheus::default' do
     end
 
     it 'creates a remote file' do
-      expect(chef_run).to create_remote_file_if_missing("#{Chef::Config['file_cache_path']}/prometheus-0.12.0.tar.bz2")
+      expect(chef_run).to create_remote_file("#{Chef::Config['file_cache_path']}/prometheus-0.12.0.tar.bz2")
     end
 
-    it 'extract prometheus' do
-      expect(chef_run).to run_execute('extract prometheus')
+    it 'notifies extract prometheus' do
+      resource = chef_run.remote_file("#{Chef::Config['file_cache_path']}/prometheus-0.12.0.tar.bz2")
+      expect(resource).to notify('execute[extract prometheus]').to(:run)
     end
 
     context 'runit' do

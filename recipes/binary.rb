@@ -17,9 +17,21 @@
 # limitations under the License.
 #
 
-src_filepath = "#{Chef::Config['file_cache_path']}/prometheus-#{node['prometheus']['version']}.tar.bz2"
+file_ext = node['prometheus']['file_extension']
+src_filepath = "#{Chef::Config['file_cache_path']}/prometheus-#{node['prometheus']['version']}.#{file_ext}"
 extract_path = node['prometheus']['dir']
-file_name = ::File.basename(node['prometheus']['binary'])
+
+tar_flags =
+case file_ext
+when /^(tar.bz2|tbz)$/
+  'xjf'
+when /^(tar.gz|tgz)$/
+  'xzf'
+when /^(tar.xz|txz)$/
+  'xJf'
+when /^(tar)$/
+  'xf'
+end
 
 package 'bzip2'
 
@@ -27,10 +39,11 @@ remote_file src_filepath do
   mode '0644'
   source node['prometheus']['binary_url']
   checksum node['prometheus']['checksum']
-  action :create_if_missing
+  action :create
+  notifies :run, 'execute[extract prometheus]', :immediately
 end
 
 execute 'extract prometheus' do
-  command "tar -xjf #{src_filepath} -C #{extract_path}"
-  not_if "test -d #{extract_path}/#{file_name}"
+  command "tar -#{tar_flags} #{src_filepath} -C #{extract_path}"
+  action :nothing
 end
