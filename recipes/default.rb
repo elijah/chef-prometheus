@@ -50,22 +50,20 @@ template node['prometheus']['flags']['config.file'] do
 end
 
 # monitor our server instance
-prometheus_job "prometheus" do
-  scrape_interval   "15s"
+prometheus_job 'prometheus' do
+  scrape_interval   '15s'
   target            "http://localhost#{node['prometheus']['flags']['web.listen-address']}#{node['prometheus']['flags']['web.telemetry-path']}"
 end
 
 accumulator node['prometheus']['flags']['config.file'] do
   filter        { |res| res.is_a? Chef::Resource::PrometheusJob }
-  target        :template => node['prometheus']['flags']['config.file']
-  transform     { |jobs| jobs.sort_by { |j| j.name } }
+  target        template: node['prometheus']['flags']['config.file']
+  transform     { |jobs| jobs.sort_by(&:name) }
   variable_name :jobs
-  notifies      :restart, "service[prometheus]"
+  notifies      :restart, 'service[prometheus]'
 end
 
 # -- Do the install -- #
 
 include_recipe "prometheus::#{node['prometheus']['install_method']}"
 include_recipe 'prometheus::service'
-
-
