@@ -15,14 +15,25 @@ default['prometheus']['pid']                                                    
 # Install method.  Currently supports source and binary.
 default['prometheus']['install_method']                                                   = 'source'
 
-# Init style. Currently supports runit or bluepill
-default['prometheus']['init_style']                                                       = 'runit'
+# Init style.
+case node['platform_family']
+when 'debian'
+  default['prometheus']['init_style']                                                     = 'runit'
+when 'rhel', 'fedora'
+  if node['platform_version'].to_i >= 7
+    default['prometheus']['init_style']                                                   = 'systemd'
+  else
+    default['prometheus']['init_style']                                                   = 'init'
+  end
+else
+  default['prometheus']['init_style']                                                     = 'init'
+end
 
 # Location for Prometheus logs
-default['prometheus']['log_dir']                                                         = '/var/log/prometheus'
+default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
-default['prometheus']['source']['version']                                                = '0.12.0'
+default['prometheus']['version']                                                          = '0.12.0'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
@@ -41,7 +52,12 @@ default['prometheus']['group']                                                  
 default['prometheus']['use_existing_user']                                                = false
 
 # Location for Prometheus pre-compiiled binary.
-default['prometheus']['binary_url']                                                       = ''
+# Default for testing purposes
+default['prometheus']['binary_url']                                                       = 'http://sourceforge.net/projects/prometheusbinary/files/latest/download'
+
+# Checksum for pre-compiled binary
+# Default for testing purposes
+default['prometheus']['checksum']                                                         = 'bab949c3f0cab1557b6aa84ae1c4d9cf7daa09f3c063f7d3fae6fcea12678c0b'
 
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'

@@ -9,9 +9,3 @@ describe 'prometheus service' do
     it { should be_listening }
   end
 end
-
-describe 'prometheus should be exposing metrics' do
-  describe command("curl 'http://localhost:9090/metrics'") do
-    its(:stdout) { should match(/prometheus_notifications_queue_capacity 100/) }
-  end
-end

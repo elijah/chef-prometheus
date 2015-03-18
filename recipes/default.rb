@@ -16,8 +16,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+user node['prometheus']['user'] do
+  system true
+  shell '/bin/false'
+  home node['prometheus']['dir']
+  not_if { node['prometheus']['use_existing_user'] == true || node['prometheus']['user'] == 'root' }
+end
 
-include_recipe "prometheus::#{node['prometheus']['install_method']}"
+directory node['prometheus']['dir'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
+directory node['prometheus']['log_dir'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
 
 # -- Write our Config -- #
 
@@ -42,5 +60,12 @@ accumulator node['prometheus']['flags']['config.file'] do
   target        :template => node['prometheus']['flags']['config.file']
   transform     { |jobs| jobs.sort_by { |j| j.name } }
   variable_name :jobs
-  notifies :restart, "service[prometheus]"
+  notifies      :restart, "service[prometheus]"
 end
+
+# -- Do the install -- #
+
+include_recipe "prometheus::#{node['prometheus']['install_method']}"
+include_recipe 'prometheus::service'
+
+

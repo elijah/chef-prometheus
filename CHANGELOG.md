@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
+### Added
+- Added systemd init for redhat platform family version 7 or greater.
+- Default init style per platform.
 
 ## [0.4.0] - 2015-05-12
 ### Fixed
