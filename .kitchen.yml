@@ -19,6 +19,9 @@ platforms:
   - name: centos-6.6
     run_list:
       - recipe[yum::default]
+  - name: centos-7.0
+    run_list:
+      - recipe[yum::default]
 
 suites:
   - name: default

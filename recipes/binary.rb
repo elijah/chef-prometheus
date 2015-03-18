@@ -21,6 +21,8 @@ src_filepath = "#{Chef::Config['file_cache_path']}/prometheus-#{node['prometheus
 extract_path = node['prometheus']['dir']
 file_name = ::File.basename(node['prometheus']['binary'])
 
+package 'bzip2'
+
 remote_file src_filepath do
   mode '0644'
   source node['prometheus']['binary_url']

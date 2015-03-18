@@ -1,8 +1,8 @@
 require_relative '../../../kitchen/data/spec_helper'
 
 describe 'prometheus service' do
-  describe service('prometheus') do
-    it { should be_running }
+  describe command('/opt/chef/embedded/bin/bluepill status prometheus') do
+    its(:stdout) { should match(/up/) }
   end
 
   describe port(9090) do
