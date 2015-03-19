@@ -141,18 +141,6 @@ describe 'prometheus::default' do
       end.converge(described_recipe)
     end
 
-    before do
-      stub_command('test -d /opt/prometheus/prometheus').and_return(false)
-    end
-
-    it 'creates a remote file' do
-      expect(chef_run).to create_remote_file_if_missing("#{Chef::Config['file_cache_path']}/prometheus-0.12.0.tar.bz2")
-    end
-
-    it 'extract prometheus' do
-      expect(chef_run).to run_execute('extract prometheus')
-    end
-
     context 'runit' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
