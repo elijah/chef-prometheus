@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe 'ark::default'
+
 dir_name = ::File.basename(node['prometheus']['dir'])
 dir_path = ::File.dirname(node['prometheus']['dir'])
 
