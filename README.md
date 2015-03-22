@@ -43,6 +43,7 @@ The following cookbooks are dependencies:
 * [apt][]
 * [runit][]
 * [bluepill][]
+* [ark][]
 
 
 ## Usage
@@ -88,3 +89,4 @@ limitations under the License.
 [runit]: https://github.com/hw-cookbooks/runit
 [Prometheus]: https://github.com/prometheus/prometheus
 [bluepill]: https://github.com/opscode-cookbooks/bluepill
+[ark]: https://github.com/burtlo/ark 

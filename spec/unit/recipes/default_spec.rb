@@ -42,7 +42,7 @@ describe 'prometheus::default' do
 
   context 'source' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new do |node|
+      ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
         node.set['prometheus']['source']['version'] = '0.12.0'
         node.set['prometheus']['install_method'] = 'source'
       end.converge(described_recipe)
@@ -76,7 +76,7 @@ describe 'prometheus::default' do
 
     context 'runit' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'runit'
         end.converge(described_recipe)
       end
@@ -92,7 +92,7 @@ describe 'prometheus::default' do
 
     context 'bluepill' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'bluepill'
         end.converge(described_recipe)
       end
@@ -108,7 +108,7 @@ describe 'prometheus::default' do
 
     context 'init' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'init'
         end.converge(described_recipe)
       end
@@ -120,7 +120,7 @@ describe 'prometheus::default' do
 
     context 'systemd' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'systemd'
         end.converge(described_recipe)
       end
@@ -141,22 +141,31 @@ describe 'prometheus::default' do
       end.converge(described_recipe)
     end
 
-    before do
-      stub_command('test -d /opt/prometheus/prometheus').and_return(false)
+    it 'runs ark with correct attributes' do
+      expect(chef_run).to put_ark('prometheus').with(
+        url: 'https://sourceforge.net/projects/prometheusbinary/files/prometheus-ubuntu14.tar.bz2/',
+        checksum: '10b24708b97847ba8bdd41f385f492a8edd460ec3c584c5b406a6c0329cc3a4e',
+        version: '0.12.0',
+        prefix_root: Chef::Config['file_cache_path'],
+        path: '/opt',
+        owner: 'prometheus',
+        group: 'prometheus'
+      )
     end
 
-    it 'creates a remote file' do
-      expect(chef_run).to create_remote_file_if_missing("#{Chef::Config['file_cache_path']}/prometheus-0.12.0.tar.bz2")
-    end
-
-    it 'extract prometheus' do
-      expect(chef_run).to run_execute('extract prometheus')
+    it 'runs ark with given file_extension' do
+      chef_run.node.set['prometheus']['file_extension'] = 'tar.bz2'
+      chef_run.converge(described_recipe)
+      expect(chef_run).to put_ark('prometheus').with(
+        extension: 'tar.bz2'
+      )
     end
 
     context 'runit' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
           node.set['prometheus']['init_style'] = 'runit'
+          node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
       end
 
@@ -173,6 +182,7 @@ describe 'prometheus::default' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
           node.set['prometheus']['init_style'] = 'bluepill'
+          node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
       end
 
@@ -189,6 +199,7 @@ describe 'prometheus::default' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
           node.set['prometheus']['init_style'] = 'init'
+          node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
       end
 
@@ -201,6 +212,7 @@ describe 'prometheus::default' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new do |node|
           node.set['prometheus']['init_style'] = 'systemd'
+          node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
       end
 
