@@ -61,6 +61,8 @@ accumulator node['prometheus']['flags']['config.file'] do
   transform     { |jobs| jobs.sort_by(&:name) }
   variable_name :jobs
   notifies      :restart, 'service[prometheus]'
+
+  not_if { node['prometheus']['allow_external_config'] && File.exist?(node['prometheus']['flags']['config.file']) }
 end
 
 # -- Do the install -- #
