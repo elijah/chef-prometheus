@@ -60,7 +60,7 @@ when 'systemd'
   # rubocop:enable Style/HashSyntax
 else
   template '/etc/init.d/prometheus' do
-    source "#{node['platform']}/prometheus.erb"
+    source 'prometheus.erb'
     owner 'root'
     group node['root_group']
     mode '0755'
