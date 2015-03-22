@@ -63,6 +63,9 @@ default['prometheus']['checksum']                                               
 # then define it here. Example 'tar.bz2'
 default['prometheus']['file_extension']                                                   = ''
 
+# Should we allow external config changes?
+default['prometheus']['allow_external_config']                                            = false
+
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
 
