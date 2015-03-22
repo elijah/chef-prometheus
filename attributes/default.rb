@@ -51,13 +51,17 @@ default['prometheus']['group']                                                  
 # Set if you want ot use the root user
 default['prometheus']['use_existing_user']                                                = false
 
-# Location for Prometheus pre-compiiled binary.
+# Location for Prometheus pre-compiled binary.
 # Default for testing purposes
-default['prometheus']['binary_url']                                                       = 'http://sourceforge.net/projects/prometheusbinary/files/latest/download'
+default['prometheus']['binary_url']                                                       = 'https://sourceforge.net/projects/prometheusbinary/files/prometheus-ubuntu14.tar.bz2/'
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['checksum']                                                         = 'bab949c3f0cab1557b6aa84ae1c4d9cf7daa09f3c063f7d3fae6fcea12678c0b'
+default['prometheus']['checksum']                                                         = '10b24708b97847ba8bdd41f385f492a8edd460ec3c584c5b406a6c0329cc3a4e'
+
+# If file extension of your binary can not be determined by the URL
+# then define it here. Example 'tar.bz2'
+default['prometheus']['file_extension']                                                   = ''
 
 # Prometheus job configuration chef template name.
 default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
@@ -103,11 +107,6 @@ default['prometheus']['flags']['query.timeout']                                 
 # logs at or above this threshold go to stderr
 default['prometheus']['flags']['stderrthreshold']                                         = 0
 
-# The capacity of the queue of samples to be stored. Note that each slot in the
-# queue takes a whole slice of samples whose size depends on details of the scrape
-# process.
-default['prometheus']['flags']['storage.incoming-samples-queue-capacity']                 = 65536
-
 # If approx. that many time series are in a state that would require a recovery
 # operation after a crash, a checkpoint is triggered, even if the checkpoint interval
 # hasn't passed yet. A recovery operation requires a disk seek. The default limit
@@ -142,10 +141,6 @@ default['prometheus']['flags']['storage.local.memory-chunks']                   
 
 # Base path for metrics storage.
 default['prometheus']['flags']['storage.local.path']                                      = '/tmp/metrics'
-
-# How many chunks can be waiting for being persisted before sample ingestion
-# will stop.
-default['prometheus']['flags']['storage.local.persistence-queue-capacity']                = 32768
 
 # How long to retain samples in the local storage.
 default['prometheus']['flags']['storage.local.retention']                                 = '360h0m0s'

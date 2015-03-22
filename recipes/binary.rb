@@ -17,20 +17,19 @@
 # limitations under the License.
 #
 
-src_filepath = "#{Chef::Config['file_cache_path']}/prometheus-#{node['prometheus']['version']}.tar.bz2"
-extract_path = node['prometheus']['dir']
-file_name = ::File.basename(node['prometheus']['binary'])
+include_recipe 'ark::default'
 
-package 'bzip2'
+dir_name = ::File.basename(node['prometheus']['dir'])
+dir_path = ::File.dirname(node['prometheus']['dir'])
 
-remote_file src_filepath do
-  mode '0644'
-  source node['prometheus']['binary_url']
+ark dir_name do
+  url node['prometheus']['binary_url']
   checksum node['prometheus']['checksum']
-  action :create_if_missing
-end
-
-execute 'extract prometheus' do
-  command "tar -xjf #{src_filepath} -C #{extract_path}"
-  not_if "test -d #{extract_path}/#{file_name}"
+  version node['prometheus']['version']
+  prefix_root Chef::Config['file_cache_path']
+  path dir_path
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  extension node['prometheus']['file_extension'] unless node['prometheus']['file_extension'].empty?
+  action :put
 end
