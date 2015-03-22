@@ -103,11 +103,6 @@ default['prometheus']['flags']['query.timeout']                                 
 # logs at or above this threshold go to stderr
 default['prometheus']['flags']['stderrthreshold']                                         = 0
 
-# The capacity of the queue of samples to be stored. Note that each slot in the
-# queue takes a whole slice of samples whose size depends on details of the scrape
-# process.
-default['prometheus']['flags']['storage.incoming-samples-queue-capacity']                 = 65536
-
 # If approx. that many time series are in a state that would require a recovery
 # operation after a crash, a checkpoint is triggered, even if the checkpoint interval
 # hasn't passed yet. A recovery operation requires a disk seek. The default limit
@@ -142,10 +137,6 @@ default['prometheus']['flags']['storage.local.memory-chunks']                   
 
 # Base path for metrics storage.
 default['prometheus']['flags']['storage.local.path']                                      = '/tmp/metrics'
-
-# How many chunks can be waiting for being persisted before sample ingestion
-# will stop.
-default['prometheus']['flags']['storage.local.persistence-queue-capacity']                = 32768
 
 # How long to retain samples in the local storage.
 default['prometheus']['flags']['storage.local.retention']                                 = '360h0m0s'
