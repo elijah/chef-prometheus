@@ -34,7 +34,6 @@ describe 'prometheus::default' do
 
   it 'renders a prometheus job configuration file and notifies prometheus to restart' do
     resource = chef_run.template('/opt/prometheus/prometheus.conf')
-    expect(chef_run).to render_file('/opt/prometheus/prometheus.conf').with_content(start_with('# Global default settings.'))
     expect(resource).to notify('service[prometheus]').to(:restart)
   end
 
