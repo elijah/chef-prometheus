@@ -37,15 +37,33 @@ directory node['prometheus']['log_dir'] do
   recursive true
 end
 
+# -- Write our Config -- #
+
 template node['prometheus']['flags']['config.file'] do
-  cookbook node['prometheus']['job_config_cookbook_name']
-  source node['prometheus']['job_config_template_name']
-  mode 0644
-  owner node['prometheus']['user']
-  group node['prometheus']['group']
-  notifies :restart, 'service[prometheus]'
+  action    :nothing
+  cookbook  node['prometheus']['job_config_cookbook_name']
+  source    node['prometheus']['job_config_template_name']
+  mode      0644
+  owner     node['prometheus']['user']
+  group     node['prometheus']['group']
+  notifies  :restart, 'service[prometheus]'
 end
 
-include_recipe "prometheus::#{node['prometheus']['install_method']}"
+# monitor our server instance
+prometheus_job 'prometheus' do
+  scrape_interval   '15s'
+  target            "http://localhost#{node['prometheus']['flags']['web.listen-address']}#{node['prometheus']['flags']['web.telemetry-path']}"
+end
 
+accumulator node['prometheus']['flags']['config.file'] do
+  filter        { |res| res.is_a? Chef::Resource::PrometheusJob }
+  target        template: node['prometheus']['flags']['config.file']
+  transform     { |jobs| jobs.sort_by(&:name) }
+  variable_name :jobs
+  notifies      :restart, 'service[prometheus]'
+end
+
+# -- Do the install -- #
+
+include_recipe "prometheus::#{node['prometheus']['install_method']}"
 include_recipe 'prometheus::service'
