@@ -19,6 +19,10 @@
 
 include_recipe 'ark::default'
 
+%w( curl tar bzip2 ).each do |pkg|
+  package pkg
+end
+
 dir_name = ::File.basename(node['prometheus']['dir'])
 dir_path = ::File.dirname(node['prometheus']['dir'])
 
