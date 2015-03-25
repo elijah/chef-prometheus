@@ -10,7 +10,7 @@ describe 'prometheus service' do
   end
 
   describe 'prometheus should be exposing metrics' do
-    describe command("wget 'http://localhost:9090/metrics' -q -O -") do
+    describe command("curl 'http://localhost:9090/metrics'") do
       its(:stdout) { should match(/prometheus_notifications_queue_capacity 100/) }
     end
   end
