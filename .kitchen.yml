@@ -32,6 +32,9 @@ suites:
   - name: init
     run_list:
         - recipe[prometheus::default]
+    provisioner:
+        name: chef_zero
+        require_chef_omnibus: 11.12.4
     attributes:
       prometheus:
         init_style: 'init'
