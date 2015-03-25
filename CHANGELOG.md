@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
 
+## [0.5.1] - 2015-03-25
+### Changed
+- Updated documentation.
+
 ## [0.5.0] - 2015-03-25
 ### Added
 - Added systemd init for redhat platform family version 7 or greater.
@@ -36,7 +40,8 @@ Thank You!
 ### Changed
 - Initial release of prometheus cookbook
 
-[unreleased]: https://github.com/rayrod2030/chef-prometheus/compare/0.5.0...HEAD
+[unreleased]: https://github.com/rayrod2030/chef-prometheus/compare/0.5.1...HEAD
+[0.5.1]: https://github.com/rayrod2030/chef-prometheus/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/rayrod2030/chef-prometheus/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/rayrod2030/chef-prometheus/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/rayrod2030/chef-prometheus/compare/0.2.0...0.3.0
