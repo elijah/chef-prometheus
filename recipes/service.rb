@@ -58,6 +58,17 @@ when 'systemd'
     action [:enable, :start]
   end
   # rubocop:enable Style/HashSyntax
+when 'upstart'
+  template '/etc/init/prometheus.conf' do
+    source 'upstart/prometheus.service.erb'
+    mode 0644
+    notifies :restart, 'service[prometheus]', :delayed
+  end
+
+  service 'prometheus' do
+    provider Chef::Provider::Service::Upstart
+    action [:enable, :start]
+  end
 else
   template '/etc/init.d/prometheus' do
     source 'prometheus.erb'
