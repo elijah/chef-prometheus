@@ -40,7 +40,7 @@ default['prometheus']['source']['git_repository']                               
 
 # Prometheus source repository git reference.  Defaults to version tag.  Can
 # also be set to a branch or master.
-default['prometheus']['source']['git_revision']                                           = node['prometheus']['source']['version']
+default['prometheus']['source']['git_revision']                                           = node['prometheus']['version']
 
 # System user to use
 default['prometheus']['user']                                                             = 'prometheus'
