@@ -1,0 +1,14 @@
+description "Prometheus"
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on runlevel [016]
+
+respawn
+env GOMAXPROCS=<%= node['cpu']['total'] %>
+setuid <%= node['prometheus']['user'] %>
+setgid <%= node['prometheus']['user'] %>
+
+script
+  exec >> "<%= node['prometheus']['log_dir'] %>/prometheus.log"
+  exec 2>&1
+  exec <%= node['prometheus']['binary'] %> <%= generate_flags %>
+end script

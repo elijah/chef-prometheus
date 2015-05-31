@@ -45,7 +45,7 @@ a user-defined location.
 ### service
 The `service` recipe configures Prometheus to run under a process supervisor.
 Default supervisors are chosen based on distribution. Currently supported
-supervisors are init, runit, systemd and bluepill.  (Upstart coming soon)
+supervisors are init, runit, systemd, upstart and bluepill.
 
 Resource/Provider
 -----------------

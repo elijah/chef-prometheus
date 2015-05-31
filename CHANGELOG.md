@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
+### Added
+- Added upstart init for ubuntu platform.
 
 ## [0.5.1] - 2015-03-25
 ### Changed

@@ -128,6 +128,18 @@ describe 'prometheus::default' do
         expect(chef_run).to render_file('/etc/systemd/system/prometheus.service')
       end
     end
+
+    context 'upstart' do
+      let(:chef_run) do
+        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+          node.set['prometheus']['init_style'] = 'upstart'
+        end.converge(described_recipe)
+      end
+
+      it 'renders an upstart job configuration file' do
+        expect(chef_run).to render_file('/etc/init/prometheus.conf')
+      end
+    end
   end
 
   # Test for binary.rb
@@ -217,6 +229,18 @@ describe 'prometheus::default' do
 
       it 'renders a systemd service file' do
         expect(chef_run).to render_file('/etc/systemd/system/prometheus.service')
+      end
+    end
+    context 'upstart' do
+      let(:chef_run) do
+        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+          node.set['prometheus']['init_style'] = 'upstart'
+          node.set['prometheus']['install_method'] = 'binary'
+        end.converge(described_recipe)
+      end
+
+      it 'renders an upstart job configuration file' do
+        expect(chef_run).to render_file('/etc/init/prometheus.conf')
       end
     end
   end
