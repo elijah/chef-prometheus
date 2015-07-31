@@ -52,7 +52,8 @@ end
 # monitor our server instance
 prometheus_job 'prometheus' do
   scrape_interval   '15s'
-  target            "http://localhost#{node['prometheus']['flags']['web.listen-address']}#{node['prometheus']['flags']['web.telemetry-path']}"
+  target            "localhost#{node['prometheus']['flags']['web.listen-address']}"
+  metrics_path      node['prometheus']['flags']['web.telemetry-path']
 end
 
 accumulator node['prometheus']['flags']['config.file'] do

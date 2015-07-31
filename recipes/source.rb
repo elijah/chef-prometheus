@@ -34,14 +34,10 @@ bash 'compile_prometheus_source' do
   cwd "#{Chef::Config[:file_cache_path]}/prometheus-#{node['prometheus']['version']}"
   code <<-EOH
     make build &&
-    cp -R prometheus #{node['prometheus']['dir']} &&
+    mv prometheus #{node['prometheus']['dir']} &&
     cp -R console_libraries #{node['prometheus']['dir']} &&
     cp -R consoles #{node['prometheus']['dir']}
   EOH
-
-  not_if do
-    File.exist?("#{node['prometheus']['dir']}/prometheus")
-  end
 
   notifies :restart, 'service[prometheus]'
 end

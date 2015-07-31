@@ -1,0 +1,18 @@
+# Global default settings.
+global:
+  scrape_interval: "15s"     # By default, scrape targets every 15 seconds.
+  evaluation_interval: "15s" # By default, evaluate rules every 15 seconds.
+
+scrape_configs:
+<% for job in @jobs||[] %>
+- job_name: "<%= job.name %>"
+  <% if job.scrape_interval %>
+  scrape_interval: "<%= job.scrape_interval %>"
+  <% end %>
+  <% if job.scrape_timeout %>
+  scrape_timeout: "<%= job.scrape_timeout %>"
+  <% end %>
+  metrics_path: "<%= job.metrics_path %>"
+  target_groups:
+    - targets: <%= [job.target] %>
+<% end %>
