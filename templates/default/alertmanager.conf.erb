@@ -1,0 +1,14 @@
+notification_config {
+  name: "alertmanager_pagerduty"
+  pagerduty_config: {
+    service_key: "<%= node['prometheus']['alertmanager']['pagerduty_service_key'] %>"
+  }
+}
+
+notification_config {
+  name: "alertmanager_hipchat"
+  hipchat_config: {
+    auth_token: "<%= node['prometheus']['alertmanager']['hipchat_auth_token'] %>"
+    room_id: <%= node['prometheus']['alertmanager']['hipchat_room_id'] %>
+  }
+}

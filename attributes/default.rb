@@ -184,3 +184,37 @@ default['prometheus']['flags']['web.use-local-assets']                          
 
 # Path to static asset directory, available at /user.
 default['prometheus']['flags']['web.user-assets']                                         = ''
+
+# Location of Alertmanager binary
+default['prometheus']['alertmanager']['binary']                                           = "#{node['prometheus']['dir']}/alertmanager"
+
+# Alertmanager version to build
+default['prometheus']['alertmanager']['version']                                          = '0.0.4'
+
+# Alertmanager source repository.
+default['prometheus']['alertmanager']['git_repository']                                   = 'https://github.com/prometheus/alertmanager.git'
+
+# Alertmanager source repository git reference.  Defaults to version tag.  Can
+# also be set to a branch or master.
+default['prometheus']['alertmanager']['git_revision']                                     = node['prometheus']['alertmanager']['version']
+
+# Alertmanager configuration file name.
+default['prometheus']['alertmanager']['config.file']                                      = "#{node['prometheus']['dir']}/alertmanager.conf"
+
+# Alertmanager configuration chef template name.
+default['prometheus']['alertmanager']['config_cookbook_name']                             = 'prometheus'
+
+# Alertmanager custom configuration cookbook.  Use this if you'd like to bypass the
+# default prometheus cookbook Alertmanager configuration template and implement your own
+# templates and recipes to configure Alertmanager.
+default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.conf.erb'
+
+# Service key to use when Alertmanager notifies Pager Duty
+default['prometheus']['alertmanager']['pagerduty_service_key']                            = 'supersecretapikey'
+
+# Auth token to use when Alertmanager notifies HipChat
+default['prometheus']['alertmanager']['hipchat_auth_token']                               = 'hipchatauthtoken'
+
+# Room ID to use when Alertmanager notifies HipChat
+default['prometheus']['alertmanager']['hipchat_room_id']                                  = 123456
+
