@@ -66,10 +66,7 @@ end
 
 bash 'compile_alertmanager_source' do
   cwd "#{Chef::Config[:file_cache_path]}/alertmanager-#{node['prometheus']['alertmanager']['version']}"
-  code <<-EOH
-    make &&
-    mv alertmanager #{node['prometheus']['dir']}
-  EOH
+  code "make && mv alertmanager #{node['prometheus']['dir']}"
 
   notifies :restart, 'service[alertmanager]'
 end
