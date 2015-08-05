@@ -90,4 +90,3 @@ service 'alertmanager' do
   supports :status => true, :restart => true
 end
 # rubocop:enable Style/HashSyntax
-
