@@ -1,0 +1,14 @@
+notification_config {
+  name: "default"
+  hipchat_config: {
+    auth_token: "<%= node['prometheus']['alertmanager']['hipchat_auth_token'] %>"
+    room_id: <%= node['prometheus']['alertmanager']['hipchat_room_id'] %>
+  }
+  pagerduty_config: {
+    service_key: "<%= node['prometheus']['alertmanager']['pagerduty_service_key'] %>"
+  }
+}
+
+aggregation_rule {
+  notification_config_name: "default"
+}

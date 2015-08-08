@@ -83,7 +83,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     }
 
     chef.run_list = [
-      'recipe[prometheus::default]'
+      'recipe[prometheus::default]',
+      'recipe[prometheus::alertmanager]'
     ]
   end
 end

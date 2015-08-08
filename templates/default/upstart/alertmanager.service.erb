@@ -1,0 +1,14 @@
+description "Prometheus Alertmanager"
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on runlevel [016]
+
+respawn
+env GOMAXPROCS=<%= node['cpu']['total'] %>
+setuid <%= node['prometheus']['user'] %>
+setgid <%= node['prometheus']['user'] %>
+
+script
+  exec >> "<%= node['prometheus']['log_dir'] %>/alertmanager.log"
+  exec 2>&1
+  exec <%= node['prometheus']['alertmanager']['binary'] %> -config.file=<%= node['prometheus']['alertmanager']['config.file'] %>
+end script
