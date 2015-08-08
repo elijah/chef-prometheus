@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
+### Changed
+- Updated attributes and templates for Prometheus 0.15 release.
+
 ### Added
 - Added upstart init for ubuntu platform.
 

@@ -37,14 +37,14 @@ end
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
-default['prometheus']['version']                                                          = '0.12.0'
+default['prometheus']['version']                                                          = '0.15.1'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
 
 # Prometheus source repository git reference.  Defaults to version tag.  Can
 # also be set to a branch or master.
-default['prometheus']['source']['git_revision']                                           = node['prometheus']['source']['version']
+default['prometheus']['source']['git_revision']                                           = node['prometheus']['version']
 
 # System user to use
 default['prometheus']['user']                                                             = 'prometheus'
@@ -57,11 +57,11 @@ default['prometheus']['use_existing_user']                                      
 
 # Location for Prometheus pre-compiled binary.
 # Default for testing purposes
-default['prometheus']['binary_url']                                                       = 'https://sourceforge.net/projects/prometheusbinary/files/prometheus-ubuntu14.tar.bz2/'
+default['prometheus']['binary_url']                                                       = 'https://github.com/prometheus/prometheus/releases/download/0.15.1/prometheus-0.15.1.linux-amd64.tar.gz'
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['checksum']                                                         = '10b24708b97847ba8bdd41f385f492a8edd460ec3c584c5b406a6c0329cc3a4e'
+default['prometheus']['checksum']                                                         = '4b283ce4bf194619d03883a9cf23bd4566a5e5c3cc483b1192a1cd3c4a756118'
 
 # If file extension of your binary can not be determined by the URL
 # then define it here. Example 'tar.bz2'
@@ -71,7 +71,7 @@ default['prometheus']['file_extension']                                         
 default['prometheus']['allow_external_config']                                            = false
 
 # Prometheus job configuration chef template name.
-default['prometheus']['job_config_template_name']                                         = 'prometheus.conf.erb'
+default['prometheus']['job_config_template_name']                                         = 'prometheus.yml.erb'
 
 # Prometheus custom configuration cookbook.  Use this if you'd like to bypass the
 # default prometheus cookbook job configuration template and implement your own
@@ -81,38 +81,29 @@ default['prometheus']['job_config_cookbook_name']                               
 # FLAGS Section: Any attributes defined under the flags hash will be used to
 # generate the command line flags for the Prometheus executable.
 
+# Prometheus configuration file name.
+default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
+
+# Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal, panic].
+default['prometheus']['flags']['log.level']                                               = 'info'
+
 # Alert manager HTTP API timeout.
 default['prometheus']['flags']['alertmanager.http-deadline']                              = '10s'
 
 # The capacity of the queue for pending alert manager notifications.
-default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = '100'
+default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = 100
 
 # The URL of the alert manager to send notifications to.
 default['prometheus']['flags']['alertmanager.url']                                        = ''
 
-# log to standard error as well as files
-default['prometheus']['flags']['alsologtostderr']                                         = false
-
-# Prometheus configuration file name.
-default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.conf"
-
-# when logging hits line file:N, emit a stack trace
-default['prometheus']['flags']['log_backtrace_at']                                        = ''
-
-# If non-empty, write log files in this directory
-default['prometheus']['flags']['log_dir']                                                 = ''
-
-# log to standard error instead of files
-default['prometheus']['flags']['logtostderr']                                             = false
+# Maximum number of queries executed concurrently.
+default['prometheus']['flags']['query.max-concurrency']                                   = 20
 
 # Staleness delta allowance during expression evaluations.
 default['prometheus']['flags']['query.staleness-delta']                                   = '5m0s'
 
 # Maximum time a query may take before being aborted.
 default['prometheus']['flags']['query.timeout']                                           = '2m0s'
-
-# logs at or above this threshold go to stderr
-default['prometheus']['flags']['stderrthreshold']                                         = 0
 
 # If approx. that many time series are in a state that would require a recovery
 # operation after a crash, a checkpoint is triggered, even if the checkpoint interval
@@ -149,20 +140,33 @@ default['prometheus']['flags']['storage.local.memory-chunks']                   
 # Base path for metrics storage.
 default['prometheus']['flags']['storage.local.path']                                      = '/tmp/metrics'
 
+# If set, a crash recovery will perform checks on each series file. This might take a very long time.
+default['prometheus']['flags']['storage.local.pedantic-checks']                           = false
+
 # How long to retain samples in the local storage.
 default['prometheus']['flags']['storage.local.retention']                                 = '360h0m0s'
 
-# The timeout to use when sending samples to OpenTSDB.
+# When to sync series files after modification. Possible values:
+# 'never', 'always', 'adaptive'. Sync'ing slows down storage performance
+# but reduces the risk of data loss in case of an OS crash. With the
+# 'adaptive' strategy, series files are sync'd for as long as the storage
+# is not too much behind on chunk persistence.
+default['prometheus']['flags']['storage.local.series-sync-strategy']                      = 'adaptive'
+
+# The URL of the remote InfluxDB server to send samples to. None, if empty.
+default['prometheus']['flags']['storage.remote.influxdb-url']                             = ''
+
+# The name of the database to use for storing samples in InfluxDB.
+default['prometheus']['flags']['storage.remote.influxdb.database']                        = 'prometheus'
+
+# The InfluxDB retention policy to use.
+default['prometheus']['flags']['storage.remote.influxdb.retention-policy']                = 'default'
+
+# The URL of the OpenTSDB instance to send samples to. None, if empty.
+default['prometheus']['flags']['storage.remote.opentsdb-url']                             = ''
+
+# The timeout to use when sending samples to the remote storage.
 default['prometheus']['flags']['storage.remote.timeout']                                  = '30s'
-
-# The URL of the OpenTSDB instance to send samples to.
-default['prometheus']['flags']['storage.remote.url']                                      = ''
-
-# log level for V logs
-default['prometheus']['flags']['v']                                                       = 0
-
-# comma-separated list of pattern=N settings for file-filtered logging
-default['prometheus']['flags']['vmodule']                                                 = ''
 
 # Path to the console library directory.
 default['prometheus']['flags']['web.console.libraries']                                   = 'console_libraries'
@@ -172,6 +176,12 @@ default['prometheus']['flags']['web.console.templates']                         
 
 # Enable remote service shutdown.
 default['prometheus']['flags']['web.enable-remote-shutdown']                              = false
+
+# The URL under which Prometheus is externally reachable (for
+# example, if Prometheus is served via a reverse proxy). Used for
+# generating relative and absolute links back to Prometheus itself. If
+# omitted, relevant URL components will be derived automatically.
+default['prometheus']['flags']['web.web.external-url']                                    = ''
 
 # Address to listen on for the web interface, API, and telemetry.
 default['prometheus']['flags']['web.listen-address']                                      = ':9090'
