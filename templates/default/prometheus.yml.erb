@@ -14,5 +14,11 @@ scrape_configs:
   <% end %>
   metrics_path: "<%= job.metrics_path %>"
   target_groups:
-    - targets: <%= [job.target] %>
+    - targets: <%= job.target.kind_of?(String) ? [job.target] : job.target %>
+<% end %>
+
+<% if @rule_filenames %>
+rule_files:
+<% @rule_filenames.each do |filename| %>
+  - <%= filename %>
 <% end %>

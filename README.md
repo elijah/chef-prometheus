@@ -114,8 +114,8 @@ your wrapper cookbooks.
 
 include_recipe "prometheus::use_lwrp"
 
-# Change the default top level directory for prometheus install as an example of attribute overrides
-node.set['prometheus']['dir'] = '/usr/local/prometheus'
+# Add a rule filename under `rule_files` in prometheus.yml.erb
+node.set['prometheus']['rule_filenames'] = ["#{node['prometheus']['dir']}/alert.rules"]
 
 # Example of using search to populate prometheus.yaml jobs using the prometheus_job LWRP
 # Finds all the instances that are in the current environment and are taged with "node_exporter"
@@ -126,7 +126,8 @@ client_servers = search(:node, "environment:#{node.chef_environment} AND tags:no
 client_servers.each do |server|
 	prometheus_job server.service_name do
   	  scrape_interval   ‘15s’
-	  target            “http://#{server.fqdn}#{node[‘prometheus’][‘flags’][‘web.listen-address’]}#{node[‘prometheus’][‘flags’][‘web.telemetry-path’]}”
+	  target            “#{server.fqdn}#{node[‘prometheus’][‘flags’][‘web.listen-address’]}"
+	  metric_path       "#{node[‘prometheus’][‘flags’][‘web.telemetry-path’]}”
 	end
 end
 

@@ -227,3 +227,6 @@ default['prometheus']['alertmanager']['hipchat_auth_token']                     
 
 # Room ID to use when Alertmanager notifies HipChat
 default['prometheus']['alertmanager']['hipchat_room_id']                                  = 123456
+
+# Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
+default['prometheus']['rule_filenames']                                                   = nil
