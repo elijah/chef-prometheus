@@ -47,7 +47,7 @@ template node['prometheus']['flags']['config.file'] do
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
   variables(
-    :rule_filenames => node['prometheus']['rule_filenames']
+    rule_filenames: node['prometheus']['rule_filenames']
   )
   notifies  :restart, 'service[prometheus]'
 end
