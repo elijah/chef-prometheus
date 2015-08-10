@@ -17,7 +17,6 @@ scrape_configs:
     - targets: <%= job.target.kind_of?(String) ? [job.target] : job.target %>
 <% end %>
 
-<% Chef::Log.info "^^^^^^^^^^^ @rule_filenames: #{@rule_filenames.inspect}" %>
 <% if @rule_filenames %>
 rule_files:
 <% @rule_filenames.each do |filename| %>
