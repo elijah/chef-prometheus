@@ -39,6 +39,8 @@ end
 
 # -- Write our Config -- #
 
+Chef::Log.info "^^^^^^^^^ node['prometheus']['rule_filenames']: #{node['prometheus']['rule_filenames'].inspect}"
+
 template node['prometheus']['flags']['config.file'] do
   action    :nothing
   cookbook  node['prometheus']['job_config_cookbook_name']
