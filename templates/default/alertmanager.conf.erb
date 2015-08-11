@@ -3,7 +3,7 @@ notification_config {
 
 <% @notification_config.each do |name, config| %>
   <%=  name %>: {
-  <% @config.each do |k, v| %> 
+  <% @notification_config[name].each do |k, v| %> 
     <%= k %>: "<%= v %>"
   <% end %>
 
