@@ -71,10 +71,15 @@ bash 'compile_alertmanager_source' do
   notifies :restart, 'service[alertmanager]'
 end
 
+
 template '/etc/init/alertmanager.conf' do
   source 'upstart/alertmanager.service.erb'
   mode 0644
   notifies :restart, 'service[alertmanager]', :delayed
+  variables(
+    notification_config: node['prometheus']['alertmanager']['notification']
+  )
+  notifies  :restart, 'service[alertmanager]'
 end
 
 service 'alertmanager' do

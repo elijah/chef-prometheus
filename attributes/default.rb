@@ -82,6 +82,7 @@ default['prometheus']['job_config_cookbook_name']                               
 # generate the command line flags for the Prometheus executable.
 
 # Prometheus configuration file name.
+
 default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
 
 # Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal, panic].
@@ -230,3 +231,6 @@ default['prometheus']['alertmanager']['hipchat_room_id']                        
 
 # Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
 default['prometheus']['rule_filenames']                                                   = nil
+
+
+default['prometheus']['alertmanager']['notification'] = {}
