@@ -1,7 +1,10 @@
 # Global default settings.
 global:
-  scrape_interval: "15s"     # By default, scrape targets every 15 seconds.
-  evaluation_interval: "15s" # By default, evaluate rules every 15 seconds.
+  scrape_interval:     "15s"
+  evaluation_interval: "15s"
+
+rule_files:
+- "rules/*.rules"
 
 scrape_configs:
 <% for job in @jobs||[] %>
@@ -14,5 +17,5 @@ scrape_configs:
   <% end %>
   metrics_path: "<%= job.metrics_path %>"
   target_groups:
-    - targets: <%= [job.target] %>
+    - targets: <%= [job.target].flatten().map{ |t| t.gsub(Regexp.new('http://(.*)/metrics'), '\1') } %>
 <% end %>
