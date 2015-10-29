@@ -4,11 +4,7 @@ stop on runlevel [016]
 
 respawn
 env GOMAXPROCS=<%= node['cpu']['total'] %>
-setuid <%= node['prometheus']['user'] %>
-setgid <%= node['prometheus']['user'] %>
 
 script
-  exec >> "<%= node['prometheus']['log_dir'] %>/prometheus.log"
-  exec 2>&1
-  exec <%= node['prometheus']['binary'] %> <%= generate_flags %>
+  exec su -s /bin/sh - <%= node['prometheus']['user'] %> -c "<%= node['prometheus']['binary'] %> <%= generate_flags %> > <%= node['prometheus']['log_dir'] %>/prometheus.log 2>&1"
 end script
