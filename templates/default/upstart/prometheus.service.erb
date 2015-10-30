@@ -6,5 +6,7 @@ respawn
 env GOMAXPROCS=<%= node['cpu']['total'] %>
 
 script
-  exec su -s /bin/sh - <%= node['prometheus']['user'] %> -c "<%= node['prometheus']['binary'] %> <%= generate_flags %> > <%= node['prometheus']['log_dir'] %>/prometheus.log 2>&1"
+  exec >> <%= node['prometheus']['log_dir'] %>/prometheus.log
+  exec 2>&1
+  exec su -s /bin/sh - <%= node['prometheus']['user'] %> -c '<%= node['prometheus']['binary'] %> <%= generate_flags %>'
 end script
