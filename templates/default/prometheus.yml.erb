@@ -19,6 +19,10 @@ scrape_configs:
   <% if job.consul_sd_server and job.consul_sd_services %>
   consul_sd_configs:
     - server: <%= job.consul_sd_server %>
+    <% if job.consul_sd_datacenter %>
+      datacenter: <%= job.consul_sd_datacenter %>
+
+    <% end %>
       services: <%= job.consul_sd_services %>
   <% end %>
   <% if job.target %>
