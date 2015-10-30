@@ -16,6 +16,13 @@ scrape_configs:
   scrape_timeout: "<%= job.scrape_timeout %>"
   <% end %>
   metrics_path: "<%= job.metrics_path %>"
+  <% if job.consul_sd_server and job.consul_sd_services %>
+  consul_sd_configs:
+    - server: <%= job.consul_sd_server %>
+      services: <%= job.consul_sd_services %>
+  <% end %>
+  <% if job.target %>
   target_groups:
     - targets: <%= [job.target].flatten().map{ |t| t.gsub(Regexp.new('http://(.*)/metrics'), '\1') } %>
+  <% end %>
 <% end %>
