@@ -12,7 +12,7 @@ issues_url 'https://github.com/elijah/chef-prometheus/issues'
   supports os
 end
 
-depends 'apt'
+depends 'apt', '= 3.0.0' # any higher requires chef 12
 depends 'yum'
 depends 'build-essential'
 depends 'runit', '~> 1.5'
