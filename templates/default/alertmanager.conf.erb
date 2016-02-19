@@ -1,14 +1,141 @@
-notification_config {
-  name: "default"
-  hipchat_config: {
-    auth_token: "<%= node['prometheus']['alertmanager']['hipchat_auth_token'] %>"
-    room_id: <%= node['prometheus']['alertmanager']['hipchat_room_id'] %>
-  }
-  pagerduty_config: {
-    service_key: "<%= node['prometheus']['alertmanager']['pagerduty_service_key'] %>"
-  }
-}
+global:
+  <% if node["prometheus"]["alertmanager"]["config"]["smtp"] %>
+    # The smarthost and SMTP sender used for email notifications.
+    smtp_smarthost: '<%= node["prometheus"]["alertmanager"]["config"]["smtp"]["smtp_smarthost"] %>'
+    smtp_from: '<%= node["prometheus"]["alertmanager"]["config"]["smtp"]["smtp_from"] %>'
+  <% end %>
 
-aggregation_rule {
-  notification_config_name: "default"
-}
+
+# The root route on which each incoming alert enters.
+route:
+  # The labels by which incoming alerts are grouped together. For example,
+  # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+  # be batched into a single group.
+  group_by: ['severity']
+
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  group_wait: 1m
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 15m
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 4h
+
+  # A default receiver
+  receiver: 'notifications'
+
+  # All the above attributes are inherited by all child routes and can
+  # overwritten on each.
+
+  # The child route trees.
+  routes:
+  # This routes performs a regular expression match on alert labels to
+  # catch alerts that are related to a list of services.
+    - match_re:
+        severity: ^(critical|warning)$
+      receiver: 'notifications'
+      # Child Routes (having greater precedence)
+      routes:
+      - match:
+          severity: critical
+        receiver: 'notifications-and-pagerduty'
+
+
+# Inhibition rules allow to mute a set of alerts given that another alert is
+# firing.
+# We use this to mute any warning-level notifications if the same alert is
+# already critical.
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  # Apply inhibition if the alertname is the same.
+  equal: ['alertname', 'cluster', 'service']
+
+
+
+receivers:
+  - name: 'notifications'
+    # Send email notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["emails"] %>
+    email_configs:
+      <% for @email in @node["prometheus"]["alertmanager"]["config"]["emails"] %>
+      - to: '<%= @email %>'
+      <% end %>
+    <% end %>
+    # Slack Notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["slack"] %>
+    slack_configs:
+      <% for @channel in @node["prometheus"]["alertmanager"]["config"]["slack"]["channels"] %>
+      - api_url: '<%= node["prometheus"]["alertmanager"]["config"]["slack"]["api_url"] %>'
+        channel: '<%= @channel %>'
+        username: '<%= node["prometheus"]["alertmanager"]["config"]["slack"]["username"] %>'
+      <% end %>
+    <% end %>
+    # Hipchat Notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["hipchat"] %>
+    hipchat_configs:
+      <% for @room_id in @node["prometheus"]["alertmanager"]["config"]["hipchat"]["rooms"] %>
+      - auth_token: '<%= node["prometheus"]["alertmanager"]["config"]["hipchat"]["auth_token"] %>'
+        api_url: '<%= node["prometheus"]["alertmanager"]["config"]["hipchat"]["api_url"] %>'
+        room_id: '<%= @room_id %>'
+        from: '<%= node["prometheus"]["alertmanager"]["config"]["hipchat"]["from"] %>'
+      <% end %>
+    <% end %>
+    # OpsGenie Notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["opsgenie"] %>
+    opsgenie_configs:
+      - api_key: '<%= node["prometheus"]["alertmanager"]["config"]["opsgenie"]["api_key"] %>'
+        api_host: '<%= node["prometheus"]["alertmanager"]["config"]["opsgenie"]["api_host"] %>'
+        source: '<%= node["prometheus"]["alertmanager"]["config"]["opsgenie"]["source"] %>'
+    <% end %>
+
+
+  - name: 'notifications-and-pagerduty'
+    # Trigger pagerduty, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["pagerduty"] %>
+    pagerduty_configs:
+      - service_key: '<%= node["prometheus"]["alertmanager"]["config"]["pagerduty"]["service_key"] %>'
+    <% end %>
+    # Send email notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["emails"] %>
+    email_configs:
+      <% for @email in @node["prometheus"]["alertmanager"]["config"]["emails"] %>
+      - to: '<%= @email %>'
+      <% end %>
+    <% end %>
+    # Slack Notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["slack"] %>
+    slack_configs:
+      <% for @channel in @node["prometheus"]["alertmanager"]["config"]["slack"]["channels"] %>
+      - api_url: '<%= node["prometheus"]["alertmanager"]["config"]["slack"]["api_url"] %>'
+        channel: '<%= @channel %>'
+        username: '<%= node["prometheus"]["alertmanager"]["config"]["slack"]["username"] %>'
+      <% end %>
+    <% end %>
+    # Hipchat Notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["hipchat"] %>
+    hipchat_configs:
+      <% for @room_id in @node["prometheus"]["alertmanager"]["config"]["hipchat"]["rooms"] %>
+      - auth_token: '<%= node["prometheus"]["alertmanager"]["config"]["hipchat"]["auth_token"] %>'
+        api_url: '<%= node["prometheus"]["alertmanager"]["config"]["hipchat"]["api_url"] %>'
+        room_id: '<%= @room_id %>'
+        from: '<%= node["prometheus"]["alertmanager"]["config"]["hipchat"]["from"] %>'
+      <% end %>
+    <% end %>
+    # OpsGenie Notifications, if configured
+    <% if node["prometheus"]["alertmanager"]["config"]["opsgenie"] %>
+    opsgenie_configs:
+      - api_key: '<%= node["prometheus"]["alertmanager"]["config"]["opsgenie"]["api_key"] %>'
+        api_host: '<%= node["prometheus"]["alertmanager"]["config"]["opsgenie"]["api_host"] %>'
+        source: '<%= node["prometheus"]["alertmanager"]["config"]["opsgenie"]["source"] %>'
+    <% end %>
+

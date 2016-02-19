@@ -219,11 +219,44 @@ default['prometheus']['alertmanager']['config_cookbook_name']                   
 # templates and recipes to configure Alertmanager.
 default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.conf.erb'
 
-# Service key to use when Alertmanager notifies Pager Duty
-default['prometheus']['alertmanager']['pagerduty_service_key']                            = 'supersecretapikey'
+# SMTP settings: smtp from address (identity) for email notifications
+default['prometheus']['alertmanager']['config']['smtp']['smtp_from']                      = ''
 
-# Auth token to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_auth_token']                               = 'hipchatauthtoken'
+# SMTP settings: smtp smarthost for connecting it to a SMTP host
+default['prometheus']['alertmanager']['config']['smtp']['smtp_smarthost']                 = ''
 
-# Room ID to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_room_id']                                  = 123456
+# List of email ids, to whom email notifications will be sent
+default['prometheus']['alertmanager']['config']['emails']                                 = []
+
+# Hipchat config: API URL for connecting to hipchat server
+default['prometheus']['alertmanager']['config']['hipchat']['api_url']                     = ''
+
+# Hipchat config: Auth Token for authentication
+default['prometheus']['alertmanager']['config']['hipchat']['auth_token']                  = ''
+
+# Hipchat config: From (identity) to be used for messages
+default['prometheus']['alertmanager']['config']['hipchat']['from']                        = ''
+
+# Hipchat config: List of rooms where alert notifications will be sent
+default['prometheus']['alertmanager']['config']['hipchat']['rooms']                       = []
+
+# OpsGenie config: API host for connecting to opsgenie
+default['prometheus']['alertmanager']['config']['opsgenie']['api_host']                   = ''
+
+# OpsGenie config: API key for authentication
+default['prometheus']['alertmanager']['config']['opsgenie']['api_key']                    = ''
+
+# OpsGenie config: Source (itentity) to be used for messages
+default['prometheus']['alertmanager']['config']['opsgenie']['source']                     = ''
+
+# Pagerduty config: Pagerduty service key
+default['prometheus']['alertmanager']['config']['pagerduty']['service_key']               = ''
+
+# Slack config: API Url for connecting to slack
+default['prometheus']['alertmanager']['config']['slack']['api_url']                       = ''
+
+# Slack config: List of chennels where alert notifications will be sent
+default['prometheus']['alertmanager']['config']['slack']['channels']                      = []
+
+# Slack config: Slack username (identity) to be used for messages
+default['prometheus']['alertmanager']['config']['slack']['username']                      = ''
