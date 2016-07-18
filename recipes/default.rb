@@ -37,6 +37,13 @@ directory node['prometheus']['log_dir'] do
   recursive true
 end
 
+directory node['prometheus']['flags']['storage.local.path'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
 # -- Write our Config -- #
 
 template node['prometheus']['flags']['config.file'] do
