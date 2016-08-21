@@ -88,7 +88,8 @@ default['prometheus']['flags']['config.file']                                   
 default['prometheus']['flags']['log.level']                                               = 'info'
 
 # Alert manager HTTP API timeout.
-default['prometheus']['flags']['alertmanager.http-deadline']                              = '10s'
+timeout_flag = Gem::Version.new(node['prometheus']['version']) <= Gem::Version.new('0.16.2') ? 'http-deadline' : 'timeout'
+default['prometheus']['flags']["alertmanager.#{timeout_flag}"]                            = '10s'
 
 # The capacity of the queue for pending alert manager notifications.
 default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = 100
