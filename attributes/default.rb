@@ -19,7 +19,11 @@ default['prometheus']['install_method']                                         
 case node['platform_family']
 when 'debian'
   if node['platform'] == 'ubuntu'
-    default['prometheus']['init_style']                                                   = 'upstart'
+    if node['platform_version'].to_float < 15.04
+      default['prometheus']['init_style']                                                 = 'upstart'
+    else
+      default['prometheus']['init_style']                                                 = 'systemd'
+    end
   else
     default['prometheus']['init_style']                                                   = 'runit'
   end
