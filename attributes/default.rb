@@ -37,7 +37,7 @@ end
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
-default['prometheus']['version']                                                          = '0.15.1'
+default['prometheus']['version']                                                          = '1.3.1'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
@@ -57,11 +57,11 @@ default['prometheus']['use_existing_user']                                      
 
 # Location for Prometheus pre-compiled binary.
 # Default for testing purposes
-default['prometheus']['binary_url']                                                       = 'https://github.com/prometheus/prometheus/releases/download/0.15.1/prometheus-0.15.1.linux-amd64.tar.gz'
+default['prometheus']['binary_url']                                                       = 'https://github.com/prometheus/prometheus/releases/download/v1.3.1/prometheus-1.3.1.linux-amd64.tar.gz'
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['checksum']                                                         = '4b283ce4bf194619d03883a9cf23bd4566a5e5c3cc483b1192a1cd3c4a756118'
+default['prometheus']['checksum']                                                         = '0c536ec2f027f217afb4f7407d5d3322cc8f987451f1e7f5dc6317f38971c3a4'
 
 # If file extension of your binary can not be determined by the URL
 # then define it here. Example 'tar.bz2'
@@ -86,9 +86,6 @@ default['prometheus']['flags']['config.file']                                   
 
 # Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal, panic].
 default['prometheus']['flags']['log.level']                                               = 'info'
-
-# Alert manager HTTP API timeout.
-default['prometheus']['flags']['alertmanager.http-deadline']                              = '10s'
 
 # The capacity of the queue for pending alert manager notifications.
 default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = 100
@@ -188,9 +185,6 @@ default['prometheus']['flags']['web.listen-address']                            
 
 # Path under which to expose metrics.
 default['prometheus']['flags']['web.telemetry-path']                                      = '/metrics'
-
-# Read assets/templates from file instead of binary.
-default['prometheus']['flags']['web.use-local-assets']                                    = false
 
 # Path to static asset directory, available at /user.
 default['prometheus']['flags']['web.user-assets']                                         = ''
