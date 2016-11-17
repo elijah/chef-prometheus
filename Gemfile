@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 group :unit do
-  gem 'berkshelf', '~> 3.2.0'
+  gem 'berkshelf', '~> 4.0.1'
   gem 'chefspec',  '~> 4.1.0'
 end
 
