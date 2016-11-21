@@ -87,9 +87,6 @@ default['prometheus']['flags']['config.file']                                   
 # Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal, panic].
 default['prometheus']['flags']['log.level']                                               = 'info'
 
-# Alert manager HTTP API timeout.
-default['prometheus']['flags']['alertmanager.http-deadline']                              = '10s'
-
 # The capacity of the queue for pending alert manager notifications.
 default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = 100
 
