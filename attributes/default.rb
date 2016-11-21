@@ -189,9 +189,6 @@ default['prometheus']['flags']['web.listen-address']                            
 # Path under which to expose metrics.
 default['prometheus']['flags']['web.telemetry-path']                                      = '/metrics'
 
-# Read assets/templates from file instead of binary.
-default['prometheus']['flags']['web.use-local-assets']                                    = false
-
 # Path to static asset directory, available at /user.
 default['prometheus']['flags']['web.user-assets']                                         = ''
 
