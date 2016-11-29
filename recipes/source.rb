@@ -18,6 +18,7 @@
 #
 
 include_recipe 'build-essential::default'
+include_recipe 'golang::default'
 
 # These packages are needed go build
 %w( curl git-core mercurial gzip sed ).each do |pkg|
