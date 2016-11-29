@@ -56,9 +56,9 @@ This resource adds a job definition to the Prometheus config file.  Here is an
 example of using this resource to define the default Prometheus job:
 
 ```ruby
-prometheus_job ‘prometheus’ do
-  scrape_interval   ‘15s’
-  target            “http://localhost#{node[‘prometheus’][‘flags’][‘web.listen-address’]}#{node[‘prometheus’][‘flags’][‘web.telemetry-path’]}”
+prometheus_job 'prometheus' do
+  scrape_interval   '15s'
+  target            "http://localhost#{node['prometheus']['flags']['web.listen-address']}#{node['prometheus']['flags']['web.telemetry-path']}"
 end
 ```
 
@@ -70,7 +70,7 @@ Externally managing `prometheus.conf`
 
 If you prefer to manage your `prometheus.conf` file externally using your own
 inventory or service discovery mechanism you can set
-`default[‘prometheus’][‘allow_external_config’]` to `true`.
+`default['prometheus']['allow_external_config']` to `true`.
 
 Dependencies
 ------------
