@@ -53,6 +53,9 @@ template node['prometheus']['flags']['config.file'] do
   mode      0644
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
+  variables(
+    rule_filenames: node['prometheus']['rule_filenames']
+  )
   notifies  :restart, 'service[prometheus]'
 end
 
