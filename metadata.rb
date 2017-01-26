@@ -1,4 +1,3 @@
-# rubocop:disable Style/SingleSpaceBeforeFirstArg
 name             'prometheus'
 maintainer       'Elijah Wright'
 maintainer_email 'elijah.wright@gmail.com'
@@ -6,9 +5,10 @@ license          'Apache 2.0'
 description      'Installs/Configures Prometheus'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.6.3'
-# rubocop:enable Style/SingleSpaceBeforeFirstArg
+source_url 'https://github.com/servak/chef-prometheus'
+issues_url 'https://github.com/servak/chef-prometheus/issues'
 
-%w( ubuntu debian centos redhat fedora ).each do |os|
+%w(ubuntu debian centos redhat fedora).each do |os|
   supports os
 end
 

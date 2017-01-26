@@ -19,7 +19,7 @@
 
 include_recipe 'ark::default'
 
-%w( curl tar bzip2 ).each do |pkg|
+%w(curl tar bzip2).each do |pkg|
   package pkg
 end
 
