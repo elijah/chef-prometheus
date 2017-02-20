@@ -27,7 +27,7 @@ when 'bluepill'
 
   template "#{node['bluepill']['conf_dir']}/prometheus.pill" do
     source 'prometheus.pill.erb'
-    mode 0644
+    mode '0644'
   end
 
   bluepill_service 'prometheus' do
@@ -43,14 +43,14 @@ when 'systemd'
 
   template '/etc/systemd/system/prometheus.service' do
     source 'systemd/prometheus.service.erb'
-    mode 0644
+    mode '0644'
     variables(:sysconfig_file => "/etc/#{conf_dir}/#{env_file}")
     notifies :restart, 'service[prometheus]', :delayed
   end
 
   template "/etc/#{conf_dir}/#{env_file}" do
     source "#{dist_dir}/#{conf_dir}/prometheus.erb"
-    mode 0644
+    mode '0644'
     notifies :restart, 'service[prometheus]', :delayed
   end
 
@@ -62,7 +62,7 @@ when 'systemd'
 when 'upstart'
   template '/etc/init/prometheus.conf' do
     source 'upstart/prometheus.service.erb'
-    mode 0644
+    mode '0644'
     notifies :restart, 'service[prometheus]', :delayed
   end
 

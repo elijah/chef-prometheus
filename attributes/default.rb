@@ -16,6 +16,7 @@ default['prometheus']['pid']                                                    
 default['prometheus']['install_method']                                                   = 'source'
 
 # Init style.
+# rubocop:disable Style/ConditionalAssignment
 case node['platform_family']
 when 'debian'
   if node['platform'] == 'ubuntu'
@@ -36,6 +37,7 @@ when 'rhel', 'fedora'
 else
   default['prometheus']['init_style']                                                     = 'init'
 end
+# rubocop:enable Style/ConditionalAssignment
 
 # Location for Prometheus logs
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
@@ -240,6 +242,5 @@ default['prometheus']['alertmanager']['hipchat_room_id']                        
 
 # Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
 default['prometheus']['rule_filenames']                                                   = nil
-
 
 default['prometheus']['alertmanager']['notification'] = {}

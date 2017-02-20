@@ -1,9 +1,13 @@
 require 'spec_helper'
 
+# rubocop:disable Metrics/BlockLength
 describe 'prometheus::default' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do
-    end.converge(described_recipe)
+    ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/tmp/chef/cache').converge(described_recipe)
+  end
+
+  before do
+    stub_command('/usr/local/go/bin/go version | grep "go1.5 "').and_return(0)
   end
 
   it 'creates a user with correct attributes' do
@@ -41,7 +45,7 @@ describe 'prometheus::default' do
 
   context 'source' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
         node.set['prometheus']['version'] = '0.15.1'
         node.set['prometheus']['install_method'] = 'source'
       end.converge(described_recipe)
@@ -51,7 +55,7 @@ describe 'prometheus::default' do
       expect(chef_run).to include_recipe('build-essential::default')
     end
 
-    %w( curl git-core mercurial gzip sed ).each do |pkg|
+    %w(curl git-core mercurial gzip sed).each do |pkg|
       it 'installs #{pkg}' do
         expect(chef_run).to install_package(pkg)
       end
@@ -75,7 +79,7 @@ describe 'prometheus::default' do
 
     context 'runit' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'runit'
         end.converge(described_recipe)
       end
@@ -91,7 +95,7 @@ describe 'prometheus::default' do
 
     context 'bluepill' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'bluepill'
         end.converge(described_recipe)
       end
@@ -107,7 +111,7 @@ describe 'prometheus::default' do
 
     context 'init' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'init'
         end.converge(described_recipe)
       end
@@ -119,7 +123,7 @@ describe 'prometheus::default' do
 
     context 'systemd' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'systemd'
         end.converge(described_recipe)
       end
@@ -131,7 +135,7 @@ describe 'prometheus::default' do
 
     context 'upstart' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'upstart'
         end.converge(described_recipe)
       end
@@ -146,17 +150,17 @@ describe 'prometheus::default' do
 
   context 'binary' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new do |node|
-        node.set['prometheus']['version'] = '0.15.1'
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
+        node.set['prometheus']['version'] = '1.3.1'
         node.set['prometheus']['install_method'] = 'binary'
       end.converge(described_recipe)
     end
 
     it 'runs ark with correct attributes' do
       expect(chef_run).to put_ark('prometheus').with(
-        url: 'https://github.com/prometheus/prometheus/releases/download/0.15.1/prometheus-0.15.1.linux-amd64.tar.gz',
-        checksum: '4b283ce4bf194619d03883a9cf23bd4566a5e5c3cc483b1192a1cd3c4a756118',
-        version: '0.15.1',
+        url: 'https://github.com/prometheus/prometheus/releases/download/v1.3.1/prometheus-1.3.1.linux-amd64.tar.gz',
+        checksum: '0c536ec2f027f217afb4f7407d5d3322cc8f987451f1e7f5dc6317f38971c3a4',
+        version: '1.3.1',
         prefix_root: Chef::Config['file_cache_path'],
         path: '/opt',
         owner: 'prometheus',
@@ -174,7 +178,7 @@ describe 'prometheus::default' do
 
     context 'runit' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'runit'
           node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
@@ -191,7 +195,7 @@ describe 'prometheus::default' do
 
     context 'bluepill' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'bluepill'
           node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
@@ -208,7 +212,7 @@ describe 'prometheus::default' do
 
     context 'init' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'init'
           node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
@@ -221,7 +225,7 @@ describe 'prometheus::default' do
 
     context 'systemd' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'systemd'
           node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)
@@ -233,7 +237,7 @@ describe 'prometheus::default' do
     end
     context 'upstart' do
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(file_cache_path: '/var/chef/cache') do |node|
+        ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
           node.set['prometheus']['init_style'] = 'upstart'
           node.set['prometheus']['install_method'] = 'binary'
         end.converge(described_recipe)

@@ -45,7 +45,7 @@ end
 template node['prometheus']['alertmanager']['config.file'] do
   cookbook  node['prometheus']['alertmanager']['config_cookbook_name']
   source    node['prometheus']['alertmanager']['config_template_name']
-  mode      0644
+  mode      '0644'
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
   variables(
@@ -57,7 +57,7 @@ end
 # -- Do the install -- #
 
 # These packages are needed go build
-%w( curl git-core mercurial gzip sed ).each do |pkg|
+%w(curl git-core mercurial gzip sed).each do |pkg|
   package pkg
 end
 
@@ -74,10 +74,9 @@ bash 'compile_alertmanager_source' do
   notifies :restart, 'service[alertmanager]'
 end
 
-
 template '/etc/init/alertmanager.conf' do
   source 'upstart/alertmanager.service.erb'
-  mode 0644
+  mode '0644'
   notifies :restart, 'service[alertmanager]', :delayed
 end
 

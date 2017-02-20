@@ -50,7 +50,7 @@ template node['prometheus']['flags']['config.file'] do
   action    :nothing
   cookbook  node['prometheus']['job_config_cookbook_name']
   source    node['prometheus']['job_config_template_name']
-  mode      0644
+  mode      '0644'
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
   variables(
