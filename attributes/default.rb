@@ -19,14 +19,12 @@ default['prometheus']['install_method']                                         
 # rubocop:disable Style/ConditionalAssignment
 case node['platform_family']
 when 'debian'
-  if node['platform'] == 'ubuntu'
-    if node['platform_version'].to_f < 15.04
-      default['prometheus']['init_style']                                                 = 'upstart'
-    else
-      default['prometheus']['init_style']                                                 = 'systemd'
-    end
+  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
+    default['prometheus']['init_style'] = 'upstart'
+  elsif node['platform'] == 'debian' && node['platform_version'].to_f < 8.0
+    default['prometheus']['init_style'] = 'runit'
   else
-    default['prometheus']['init_style']                                                   = 'runit'
+    default['prometheus']['init_style'] = 'systemd'
   end
 when 'rhel', 'fedora'
   if node['platform_version'].to_i >= 7
@@ -50,7 +48,7 @@ default['prometheus']['source']['git_repository']                               
 
 # Prometheus source repository git reference.  Defaults to version tag.  Can
 # also be set to a branch or master.
-default['prometheus']['source']['git_revision']                                           = node['prometheus']['version']
+default['prometheus']['source']['git_revision']                                           = "v#{node['prometheus']['version']}"
 
 # System user to use
 default['prometheus']['user']                                                             = 'prometheus'

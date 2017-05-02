@@ -33,6 +33,7 @@ end
 
 bash 'compile_prometheus_source' do
   cwd "#{Chef::Config[:file_cache_path]}/prometheus-#{node['prometheus']['version']}"
+  environment 'PATH' => "/usr/local/go/bin:#{ENV['PATH']}"
   code <<-EOH
     make build &&
     mv prometheus #{node['prometheus']['dir']} &&
