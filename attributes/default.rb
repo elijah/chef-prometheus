@@ -61,7 +61,7 @@ default['prometheus']['use_existing_user']                                      
 
 # Location for Prometheus pre-compiled binary.
 # Default for testing purposes
-default['prometheus']['binary_url']                                                       = 'https://github.com/prometheus/prometheus/releases/download/v1.3.1/prometheus-1.3.1.linux-amd64.tar.gz'
+default['prometheus']['binary_url']                                                       = "https://github.com/prometheus/prometheus/releases/download/v#{node['prometheus']['version']}/prometheus-#{node['prometheus']['version']}.linux-amd64.tar.gz"
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
