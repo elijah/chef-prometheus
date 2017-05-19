@@ -231,15 +231,6 @@ default['prometheus']['alertmanager']['config_cookbook_name']                   
 # templates and recipes to configure Alertmanager.
 default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.conf.erb'
 
-# Service key to use when Alertmanager notifies Pager Duty
-default['prometheus']['alertmanager']['pagerduty_service_key']                            = 'supersecretapikey'
-
-# Auth token to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_auth_token']                               = 'hipchatauthtoken'
-
-# Room ID to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_room_id']                                  = 123456
-
 # Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
 default['prometheus']['rule_filenames']                                                   = nil
 
