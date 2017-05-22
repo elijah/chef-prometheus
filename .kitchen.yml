@@ -8,11 +8,11 @@ provisioner:
 platforms:
   - name: ubuntu-14.04
   - name: ubuntu-16.04
-  - name: debian-7.9
+  - name: debian-7.11
     driver:
       cache_directory: false
   - name: debian-8.7
-  - name: centos-6.8
+  - name: centos-6.9
     run_list:
       - recipe[yum::default]
   - name: centos-7.3
