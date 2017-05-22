@@ -13,7 +13,7 @@ default['prometheus']['binary']                                                 
 default['prometheus']['pid']                                                              = '/var/run/prometheus.pid'
 
 # Install method.  Currently supports source and binary.
-default['prometheus']['install_method']                                                   = 'source'
+default['prometheus']['install_method']                                                   = 'binary'
 
 # Init style.
 # rubocop:disable Style/ConditionalAssignment
@@ -41,7 +41,7 @@ end
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
-default['prometheus']['version']                                                          = '1.3.1'
+default['prometheus']['version']                                                          = '1.6.3'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
@@ -65,7 +65,7 @@ default['prometheus']['binary_url']                                             
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['checksum']                                                         = '0c536ec2f027f217afb4f7407d5d3322cc8f987451f1e7f5dc6317f38971c3a4'
+default['prometheus']['checksum']                                                         = 'bb4e3bf4c9cd2b30fc922e48ab584845739ed4aa50dea717ac76a56951e31b98'
 
 # If file extension of your binary can not be determined by the URL
 # then define it here. Example 'tar.bz2'
