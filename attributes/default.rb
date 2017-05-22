@@ -144,7 +144,7 @@ default['prometheus']['flags']['storage.local.index-cache-size.label-pair-to-fin
 default['prometheus']['flags']['storage.local.memory-chunks']                             = 1048576
 
 # Base path for metrics storage.
-default['prometheus']['flags']['storage.local.path']                                      = '/tmp/metrics'
+default['prometheus']['flags']['storage.local.path']                                      = '/var/lib/prometheus'
 
 # If set, a crash recovery will perform checks on each series file. This might take a very long time.
 default['prometheus']['flags']['storage.local.pedantic-checks']                           = false
@@ -187,7 +187,7 @@ default['prometheus']['flags']['web.enable-remote-shutdown']                    
 # example, if Prometheus is served via a reverse proxy). Used for
 # generating relative and absolute links back to Prometheus itself. If
 # omitted, relevant URL components will be derived automatically.
-default['prometheus']['flags']['web.web.external-url']                                    = ''
+default['prometheus']['flags']['web.external-url']                                        = ''
 
 # Address to listen on for the web interface, API, and telemetry.
 default['prometheus']['flags']['web.listen-address']                                      = ':9090'
@@ -228,15 +228,6 @@ default['prometheus']['alertmanager']['config_cookbook_name']                   
 # default prometheus cookbook Alertmanager configuration template and implement your own
 # templates and recipes to configure Alertmanager.
 default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.conf.erb'
-
-# Service key to use when Alertmanager notifies Pager Duty
-default['prometheus']['alertmanager']['pagerduty_service_key']                            = 'supersecretapikey'
-
-# Auth token to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_auth_token']                               = 'hipchatauthtoken'
-
-# Room ID to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_room_id']                                  = 123456
 
 # Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
 default['prometheus']['rule_filenames']                                                   = nil
