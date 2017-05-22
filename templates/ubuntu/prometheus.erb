@@ -18,7 +18,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 export PATH
 
-name=prometheus
+name=$(basename $0)
 program="<%= node['prometheus']['binary'] %>"
 args="<%= generate_flags %>"
 pidfile=<%= node['prometheus']['pid'] %>
