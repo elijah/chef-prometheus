@@ -23,9 +23,12 @@ suites:
   - name: default
     run_list:
         - recipe[prometheus::default]
+        - recipe[prometheus::alertmanager]
     attributes:
       prometheus:
         install_method: 'binary'
+        alertmanager:
+          install_method: 'binary'
 
   - name: init-binary
     run_list:
