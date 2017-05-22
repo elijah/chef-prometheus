@@ -25,7 +25,8 @@ suites:
         - recipe[prometheus::default]
     attributes:
       go:
-        gopath: '/usr/local/go/bin'
+        gobin: '/usr/local/go/bin'
+        gopath: '/usr/local/go'
 
   - name: init
     run_list:
