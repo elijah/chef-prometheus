@@ -58,15 +58,69 @@ end
 
 include_recipe "prometheus::alertmanager_#{node['prometheus']['alertmanager']['install_method']}"
 
-template '/etc/init/alertmanager.conf' do
-  source 'upstart/alertmanager.service.erb'
-  mode '0644'
-  notifies :restart, 'service[alertmanager]', :delayed
-end
+case node['prometheus']['init_style']
+when 'runit'
+  include_recipe 'runit::default'
 
-service 'alertmanager' do
-  provider Chef::Provider::Service::Upstart
-  action [:enable, :start]
+  runit_service 'alertmanager' do
+    default_logger true
+  end
+when 'bluepill'
+  include_recipe 'bluepill::default'
+
+  template "#{node['bluepill']['conf_dir']}/alertmanager.pill" do
+    source 'alertmanager.pill.erb'
+    mode '0644'
+  end
+
+  bluepill_service 'alertmanager' do
+    action [:enable, :load]
+  end
+when 'systemd'
+  # rubocop:disable Style/HashSyntax
+  dist_dir, conf_dir, env_file = value_for_platform_family(
+    ['fedora'] => %w(fedora sysconfig alertmanager),
+    ['rhel'] => %w(redhat sysconfig alertmanager),
+    ['debian'] => %w(debian default alertmanager)
+  )
+
+  template '/etc/systemd/system/alertmanager.service' do
+    source 'systemd/alertmanager.service.erb'
+    mode '0644'
+    variables(:sysconfig_file => "/etc/#{conf_dir}/#{env_file}")
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
+
+  template "/etc/#{conf_dir}/#{env_file}" do
+    source "#{dist_dir}/#{conf_dir}/alertmanager.erb"
+    mode '0644'
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
+
+  service 'prometheus' do
+    supports :status => true, :restart => true
+    action [:enable, :start]
+  end
+  # rubocop:enable Style/HashSyntax
+when 'upstart'
+  template '/etc/init/alertmanager.conf' do
+    source 'upstart/alertmanager.service.erb'
+    mode '0644'
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
+
+  service 'alertmanager' do
+    provider Chef::Provider::Service::Upstart
+    action [:enable, :start]
+  end
+else
+  template '/etc/init.d/alertmanager' do
+    source 'alertmanager.erb'
+    owner 'root'
+    group node['root_group']
+    mode '0755'
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
 end
 
 # rubocop:disable Style/HashSyntax
@@ -74,3 +128,8 @@ service 'alertmanager' do
   supports :status => true, :restart => true
 end
 # rubocop:enable Style/HashSyntax
+
+service 'alertmanager' do
+  action [:enable, :start]
+end
+
