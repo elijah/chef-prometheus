@@ -64,7 +64,7 @@ describe 'prometheus::default' do
     it 'checks out prometheus from github' do
       expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-1.6.3").with(
         repository: 'https://github.com/prometheus/prometheus.git',
-        revision: '1.6.3'
+        revision: 'v1.6.3'
       )
     end
 
