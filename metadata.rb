@@ -17,7 +17,8 @@ depends 'apt', '= 3.0.0' # any higher requires chef 12
 depends 'yum'
 depends 'build-essential'
 depends 'runit', '~> 1.5'
-depends 'bluepill', '~> 2.3'
 depends 'ark'
 depends 'golang'
 depends 'compat_resource'
+
+suggests 'bluepill', '~> 2.3'
