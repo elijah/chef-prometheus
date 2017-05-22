@@ -3,23 +3,19 @@ driver:
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: 12.0.3
   data_path: test/shared
 
 platforms:
   - name: ubuntu-14.04
-    run_list:
-      - recipe[apt]
-  - name: ubuntu-12.04
-    run_list:
-      - recipe[apt]
-  - name: debian-7.7
-    run_list:
-      - recipe[apt]
-  - name: centos-6.6
+  - name: ubuntu-16.04
+  - name: debian-7.9
+    driver:
+      cache_directory: false
+  - name: debian-8.7
+  - name: centos-6.8
     run_list:
       - recipe[yum::default]
-  - name: centos-7.0
+  - name: centos-7.3
     run_list:
       - recipe[yum::default]
 

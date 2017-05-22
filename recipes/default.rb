@@ -44,6 +44,10 @@ directory node['prometheus']['flags']['storage.local.path'] do
   recursive true
 end
 
+apt_update 'please'
+# Ensure that any unpacking of prometheus doesn't blow away our own configuration
+include_recipe "prometheus::#{node['prometheus']['install_method']}"
+
 # -- Write our Config -- #
 
 template node['prometheus']['flags']['config.file'] do
@@ -66,17 +70,6 @@ prometheus_job 'prometheus' do
   metrics_path      node['prometheus']['flags']['web.telemetry-path']
 end
 
-accumulator node['prometheus']['flags']['config.file'] do
-  filter        { |res| res.is_a? Chef::Resource::PrometheusJob }
-  target        template: node['prometheus']['flags']['config.file']
-  transform     { |jobs| jobs.sort_by(&:name) }
-  variable_name :jobs
-  notifies      :restart, 'service[prometheus]'
-
-  not_if { node['prometheus']['allow_external_config'] && File.exist?(node['prometheus']['flags']['config.file']) }
-end
-
 # -- Do the install -- #
 
-include_recipe "prometheus::#{node['prometheus']['install_method']}"
 include_recipe 'prometheus::service'

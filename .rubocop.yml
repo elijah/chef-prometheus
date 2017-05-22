@@ -25,3 +25,5 @@ Style/ExtraSpacing:
   Enabled: false
 Style/SpaceBeforeFirstArg:
   Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
