@@ -205,6 +205,11 @@ end
 # Path to static asset directory, available at /user.
 default['prometheus']['flags']['web.user-assets']                                         = ''
 
+# Alertmanager attributes
+
+# Install method. Currently supports source and binary.
+default['prometheus']['alertmanager']['install_method']                                   = 'source'
+
 # Location of Alertmanager binary
 default['prometheus']['alertmanager']['binary']                                           = "#{node['prometheus']['dir']}/alertmanager"
 
@@ -218,8 +223,23 @@ default['prometheus']['alertmanager']['git_repository']                         
 # also be set to a branch or master.
 default['prometheus']['alertmanager']['git_revision']                                     = node['prometheus']['alertmanager']['version']
 
+# Location for Alertmanager pre-compiled binary.
+# Default for testing purposes
+default['prometheus']['alertmanager']['binary_url']                                       = 'https://github.com/prometheus/alertmanager/releases/download/0.0.4/alertmanager-0.0.4.linux-amd64.tar.gz'
+
+# Checksum for pre-compiled binary
+# Default for testing purposes
+default['prometheus']['alertmanager']['checksum']                                         = 'c41e819bef3accfe582c3eb8a50322c5ea73716fc1c55f968be7553618040810'
+
+# If file extension of your binary can not be determined by the URL
+# then define it here. Example 'tar.bz2'
+default['prometheus']['alertmanager']['file_extension']                                   = ''
+
 # Alertmanager configuration file name.
 default['prometheus']['alertmanager']['config.file']                                      = "#{node['prometheus']['dir']}/alertmanager.conf"
+
+# Alertmanager configuration storage directory
+default['prometheus']['alertmanager']['storage.path']                                     = "#{node['prometheus']['dir']}/data"
 
 # Alertmanager configuration chef template name.
 default['prometheus']['alertmanager']['config_cookbook_name']                             = 'prometheus'

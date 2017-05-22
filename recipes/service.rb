@@ -82,6 +82,6 @@ end
 
 # rubocop:disable Style/HashSyntax
 service 'prometheus' do
-  supports :status => true, :restart => true
+  supports :status => true, :restart => true, :reload => true
 end
 # rubocop:enable Style/HashSyntax

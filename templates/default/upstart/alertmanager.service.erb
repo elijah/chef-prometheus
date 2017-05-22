@@ -10,5 +10,5 @@ setgid <%= node['prometheus']['user'] %>
 script
   exec >> "<%= node['prometheus']['log_dir'] %>/alertmanager.log"
   exec 2>&1
-  exec <%= node['prometheus']['alertmanager']['binary'] %> -config.file=<%= node['prometheus']['alertmanager']['config.file'] %>
+  exec <%= node['prometheus']['alertmanager']['binary'] %> -config.file=<%= node['prometheus']['alertmanager']['config.file'] %> -storage.path=<%= node['prometheus']['alertmanager']['storage.path'] %>
 end script
