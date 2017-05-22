@@ -21,4 +21,5 @@ depends 'ark'
 depends 'golang'
 depends 'compat_resource'
 
-suggests 'bluepill', '~> 2.3'
+# this should really be a suggests
+depends 'bluepill', '~> 2.3'
