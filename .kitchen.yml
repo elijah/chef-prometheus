@@ -35,12 +35,12 @@ suites:
       prometheus:
         init_style: 'init'
 
-  - name: bluepill
-    run_list:
-        - recipe[prometheus::default]
-    attributes:
-      prometheus:
-        init_style: 'bluepill'
+#  - name: bluepill
+#    run_list:
+#        - recipe[prometheus::default]
+#    attributes:
+#      prometheus:
+#        init_style: 'bluepill'
 
   - name: default-binary
     run_list:
@@ -59,10 +59,11 @@ suites:
         flags:
           storage.remote.timeout: 45s
 
-  - name: bluepill-binary
-    run_list:
-        - recipe[prometheus::default]
-    attributes:
-      prometheus:
-        init_style: 'bluepill'
-        install_method: 'binary'
+#  - name: bluepill-binary
+#    run_list:
+#        - recipe[prometheus::default]
+#    attributes:
+#      prometheus:
+#        init_style: 'bluepill'
+#        install_method: 'binary'
+
