@@ -62,9 +62,9 @@ describe 'prometheus::default' do
     end
 
     it 'checks out prometheus from github' do
-      expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-0.15.1").with(
+      expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/prometheus-1.6.3").with(
         repository: 'https://github.com/prometheus/prometheus.git',
-        revision: '0.15.1'
+        revision: '1.6.3'
       )
     end
 
@@ -151,16 +151,16 @@ describe 'prometheus::default' do
   context 'binary' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
-        node.set['prometheus']['version'] = '1.3.1'
+        node.set['prometheus']['version'] = '1.6.3'
         node.set['prometheus']['install_method'] = 'binary'
       end.converge(described_recipe)
     end
 
     it 'runs ark with correct attributes' do
       expect(chef_run).to put_ark('prometheus').with(
-        url: 'https://github.com/prometheus/prometheus/releases/download/v1.3.1/prometheus-1.3.1.linux-amd64.tar.gz',
-        checksum: '0c536ec2f027f217afb4f7407d5d3322cc8f987451f1e7f5dc6317f38971c3a4',
-        version: '1.3.1',
+        url: 'https://github.com/prometheus/prometheus/releases/download/v1.6.3/prometheus-1.6.3.linux-amd64.tar.gz',
+        checksum: 'bb4e3bf4c9cd2b30fc922e48ab584845739ed4aa50dea717ac76a56951e31b98',
+        version: '1.6.3',
         prefix_root: Chef::Config['file_cache_path'],
         path: '/opt',
         owner: 'prometheus',
