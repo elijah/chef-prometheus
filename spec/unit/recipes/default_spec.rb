@@ -46,7 +46,7 @@ describe 'prometheus::default' do
   context 'source' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
-        node.set['prometheus']['version'] = '0.15.1'
+        node.set['prometheus']['version'] = '1.6.3'
         node.set['prometheus']['install_method'] = 'source'
       end.converge(described_recipe)
     end
