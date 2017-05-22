@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus Alert Manager
+After=network.target
+
+[Service]
+ExecStart=<%= node['prometheus']['alertmanager']['binary'] %> \
+    -log.level=debug \
+    -storage.path="/var/lib/prometheus/amdata" \
+    -config.file=/etc/prometheus/alertmanager.conf \
+    -web.external-url=http://127.0.0.1/alert-manager/
+User=prometheus
+
+[Install]
+WantedBy=multi-user.target
