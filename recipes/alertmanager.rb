@@ -40,6 +40,14 @@ directory node['prometheus']['log_dir'] do
   recursive true
 end
 
+directory node['prometheus']['alertmanager']['storage.path'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
+
 # -- Write our Config -- #
 
 template node['prometheus']['alertmanager']['config.file'] do
@@ -115,7 +123,7 @@ when 'upstart'
   end
 else
   template '/etc/init.d/alertmanager' do
-    source 'alertmanager.erb'
+    source 'alertmanager.init.erb'
     owner 'root'
     group node['root_group']
     mode '0755'
