@@ -47,7 +47,6 @@ directory node['prometheus']['alertmanager']['storage.path'] do
   recursive true
 end
 
-
 # -- Write our Config -- #
 
 template node['prometheus']['alertmanager']['config.file'] do
@@ -140,4 +139,3 @@ end
 service 'alertmanager' do
   action [:enable, :start]
 end
-
