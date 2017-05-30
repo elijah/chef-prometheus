@@ -214,7 +214,7 @@ default['prometheus']['alertmanager']['install_method']                         
 default['prometheus']['alertmanager']['binary']                                           = "#{node['prometheus']['dir']}/alertmanager"
 
 # Alertmanager version to build
-default['prometheus']['alertmanager']['version']                                          = '0.0.4'
+default['prometheus']['alertmanager']['version']                                          = '0.6.2'
 
 # Alertmanager source repository.
 default['prometheus']['alertmanager']['git_repository']                                   = 'https://github.com/prometheus/alertmanager.git'
@@ -225,11 +225,11 @@ default['prometheus']['alertmanager']['git_revision']                           
 
 # Location for Alertmanager pre-compiled binary.
 # Default for testing purposes
-default['prometheus']['alertmanager']['binary_url']                                       = 'https://github.com/prometheus/alertmanager/releases/download/0.0.4/alertmanager-0.0.4.linux-amd64.tar.gz'
+default['prometheus']['alertmanager']['binary_url']                                       = 'https://github.com/prometheus/alertmanager/releases/download/v0.6.2/alertmanager-0.6.2.linux-amd64.tar.gz'
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['alertmanager']['checksum']                                         = 'c41e819bef3accfe582c3eb8a50322c5ea73716fc1c55f968be7553618040810'
+default['prometheus']['alertmanager']['checksum']                                         = '8b796592b974a1aa51cac4e087071794989ecc957d4e90025d437b4f7cad214a'
 
 # If file extension of your binary can not be determined by the URL
 # then define it here. Example 'tar.bz2'
