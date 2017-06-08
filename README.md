@@ -127,7 +127,7 @@ client_servers.each do |server|
 	prometheus_job server.service_name do
   	  scrape_interval   ‘15s’
 	  target            “#{server.fqdn}#{node[‘prometheus’][‘flags’][‘web.listen-address’]}"
-	  metric_path       "#{node[‘prometheus’][‘flags’][‘web.telemetry-path’]}”
+	  metrics_path       "#{node[‘prometheus’][‘flags’][‘web.telemetry-path’]}”
 	end
 end
 
