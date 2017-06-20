@@ -15,7 +15,14 @@ scrape_configs:
   metrics_path: "<%= job['metrics_path'] %>"
   static_configs:
     - targets: <%=  Array(job['target']) %>
-<% end %>
+    <%if job['labels'] %>
+      labels:
+      <% job['labels'].each do |label,label_config| %>
+        <%=label%>: <%=label_config%>
+      <%end%>
+    <%end%>
+
+  <% end %>
 
 <% if @rule_filenames %>
 rule_files:
