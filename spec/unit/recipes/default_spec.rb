@@ -36,9 +36,9 @@ describe 'prometheus::default' do
     )
   end
 
-  it 'renders a prometheus job configuration file and notifies prometheus to restart' do
+  it 'renders a prometheus job configuration file and notifies prometheus to reload' do
     resource = chef_run.template('/opt/prometheus/prometheus.yml')
-    expect(resource).to notify('service[prometheus]').to(:restart)
+    expect(resource).to notify('service[prometheus]').to(:reload)
   end
 
   # Test for source.rb
@@ -72,7 +72,7 @@ describe 'prometheus::default' do
       expect(chef_run).to run_bash('compile_prometheus_source')
     end
 
-    it 'notifies prometheus to restart' do
+    it 'notifies prometheus to reload' do
       resource = chef_run.bash('compile_prometheus_source')
       expect(resource).to notify('service[prometheus]').to(:restart)
     end
