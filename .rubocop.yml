@@ -27,3 +27,9 @@ Style/SpaceBeforeFirstArg:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+Style/PercentLiteralDelimiters:
+  Enabled: false
+Style/SymbolArray:
+  Enabled: false
