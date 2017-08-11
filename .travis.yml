@@ -12,7 +12,7 @@ before_install:
 
 install:
 - bundle install
-- bundle exec berks vendor /tmp/cookbooks
+- bundle exec berks install
 
 script:
   - bundle exec rake travis:ci
