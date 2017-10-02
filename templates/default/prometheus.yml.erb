@@ -22,6 +22,11 @@ scrape_configs:
         <%=label%>: <%=label_config%>
       <%end%>
     <%end%>
+  <% if job['dns_sd_configs'] %>
+    <%= job['dns_sd_configs'] %>
+
+  <%end%>
+
 
   <% end %>
 

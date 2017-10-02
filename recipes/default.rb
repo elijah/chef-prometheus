@@ -50,25 +50,25 @@ include_recipe "prometheus::#{node['prometheus']['install_method']}"
 
 # -- Write our Config -- #
 
-template node['prometheus']['flags']['config.file'] do
-  action    :nothing
-  cookbook  node['prometheus']['job_config_cookbook_name']
-  source    node['prometheus']['job_config_template_name']
-  mode      '0644'
-  owner     node['prometheus']['user']
-  group     node['prometheus']['group']
-  variables(
-    rule_filenames: node['prometheus']['rule_filenames']
-  )
-  notifies  :reload, 'service[prometheus]'
-end
+#template node['prometheus']['flags']['config.file'] do
+#  action    :nothing
+#  cookbook  node['prometheus']['job_config_cookbook_name']
+#  source    node['prometheus']['job_config_template_name']
+#  mode      '0644'
+#  owner     node['prometheus']['user']
+#  group     node['prometheus']['group']
+#  variables(
+#    rule_filenames: node['prometheus']['rule_filenames']
+#  )
+#  notifies  :reload, 'service[prometheus]'
+#end
 
 # monitor our server instance
-prometheus_job 'prometheus' do
-  scrape_interval   '15s'
-  target            "localhost#{node['prometheus']['flags']['web.listen-address']}"
-  metrics_path      node['prometheus']['flags']['web.telemetry-path']
-end
+#prometheus_job 'prometheus' do
+#  scrape_interval   '15s'
+#  target            "localhost#{node['prometheus']['flags']['web.listen-address']}"
+#  metrics_path      node['prometheus']['flags']['web.telemetry-path']
+#end
 
 # -- Do the install -- #
 
