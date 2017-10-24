@@ -12,7 +12,7 @@ default['prometheus']['binary']                                                 
 # Location of Prometheus pid file
 default['prometheus']['pid']                                                              = '/var/run/prometheus.pid'
 
-# Install method.  Currently supports source and binary.
+# Install method.  Currently supports source, binary and shell_binary.
 default['prometheus']['install_method']                                                   = 'binary'
 
 # Init style.
