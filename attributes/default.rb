@@ -87,29 +87,41 @@ default['prometheus']['job_config_cookbook_name']                               
 
 # Prometheus configuration file name.
 
+default['prometheus']['v2_cli_flags']                                                     = [
+                                                                                               'web.enable-lifecycle'
+                                                                                            ]
+
 default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
+default['prometheus']['v2_cli_opts']['config.file']                                       = "#{node['prometheus']['dir']}/prometheus.yml"
 
 # Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal, panic].
 default['prometheus']['flags']['log.level']                                               = 'info'
+default['prometheus']['v2_cli_opts']['log.level']                                         = 'info'
 
 # Alert manager HTTP API timeout.
 timeout_flag = Gem::Version.new(node['prometheus']['version']) <= Gem::Version.new('0.16.2') ? 'http-deadline' : 'timeout'
 default['prometheus']['flags']["alertmanager.#{timeout_flag}"]                            = '10s'
+default['prometheus']['v2_cli_opts']["alertmanager.#{timeout_flag}"]                      = '10s'
 
 # The capacity of the queue for pending alert manager notifications.
 default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = 100
+default['prometheus']['v2_cli_opts']['alertmanager.notification-queue-capacity']          = 100
 
 # The URL of the alert manager to send notifications to.
 default['prometheus']['flags']['alertmanager.url']                                        = 'http://127.0.0.1/alert-manager/'
+default['prometheus']['v2_cli_opts']['alertmanager.url']                                  = 'http://127.0.0.1/alert-manager/'
 
 # Maximum number of queries executed concurrently.
 default['prometheus']['flags']['query.max-concurrency']                                   = 20
+default['prometheus']['v2_cli_opts']['query.max-concurrency']                             = 20
 
 # Staleness delta allowance during expression evaluations.
-default['prometheus']['flags']['query.staleness-delta']                                   = '5m0s'
+default['prometheus']['flags']['query.staleness-delta']                                   = '5m'
+default['prometheus']['v2_cli_opts']['query.lookback-delta']                              = '5m'
 
 # Maximum time a query may take before being aborted.
-default['prometheus']['flags']['query.timeout']                                           = '2m0s'
+default['prometheus']['flags']['query.timeout']                                           = '2m'
+default['prometheus']['v2_cli_opts']['query.timeout']                                     = '2m'
 
 # If approx. that many time series are in a state that would require a recovery
 # operation after a crash, a checkpoint is triggered, even if the checkpoint interval
@@ -120,7 +132,7 @@ default['prometheus']['flags']['query.timeout']                                 
 default['prometheus']['flags']['storage.local.checkpoint-dirty-series-limit']             = 5000
 
 # The period at which the in-memory index of time series is checkpointed.
-default['prometheus']['flags']['storage.local.checkpoint-interval']                       = '5m0s'
+default['prometheus']['flags']['storage.local.checkpoint-interval']                       = '5m'
 
 # If set, the local storage layer will perform crash recovery even if the last
 # shutdown appears to be clean.
@@ -145,6 +157,7 @@ default['prometheus']['flags']['storage.local.memory-chunks']                   
 
 # Base path for metrics storage.
 default['prometheus']['flags']['storage.local.path']                                      = '/var/lib/prometheus'
+default['prometheus']['v2_cli_opts']['storage.tsdb.path']                                 = '/var/lib/prometheus'
 
 # If set, a crash recovery will perform checks on each series file. This might take a very long time.
 default['prometheus']['flags']['storage.local.pedantic-checks']                           = false
@@ -172,6 +185,9 @@ default['prometheus']['flags']['storage.remote.influxdb.retention-policy']      
 default['prometheus']['flags']['storage.remote.opentsdb-url']                             = ''
 
 # The timeout to use when sending samples to the remote storage.
+default['prometheus']['flags']['storage.remote.timeout']                                  = '30s'
+
+# prometheus v2.x flags
 default['prometheus']['flags']['storage.remote.timeout']                                  = '30s'
 
 # Path to the console library directory.
