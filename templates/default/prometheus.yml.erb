@@ -1,7 +1,8 @@
 # Global default settings.
 global:
-  scrape_interval: "15s"     # By default, scrape targets every 15 seconds.
-  evaluation_interval: "15s" # By default, evaluate rules every 15 seconds.
+  <%node['prometheus']['global'].each do |k,v|%>
+  <%=k%>: "<%=v%>"
+  <%end%>
 
 scrape_configs:
 <% @jobs.each do |name, job| %>
@@ -15,7 +16,14 @@ scrape_configs:
   metrics_path: "<%= job['metrics_path'] %>"
   static_configs:
     - targets: <%=  Array(job['target']) %>
-<% end %>
+    <%if job['labels'] %>
+      labels:
+      <% job['labels'].each do |label,label_config| %>
+        <%=label%>: <%=label_config%>
+      <%end%>
+    <%end%>
+
+  <% end %>
 
 <% if @rule_filenames %>
 rule_files:

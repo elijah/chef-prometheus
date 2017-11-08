@@ -268,3 +268,6 @@ default['prometheus']['alertmanager']['config_template_name']                   
 default['prometheus']['rule_filenames']                                                   = nil
 
 default['prometheus']['alertmanager']['notification'] = {}
+
+default['prometheus']['global']['scrape_interval'] = '60s'
+default['prometheus']['global']['evaluation_interval'] = '60s'
