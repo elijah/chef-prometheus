@@ -13,7 +13,6 @@ chef_version '>= 12.15.25' if respond_to?(:chef_version)
   supports os
 end
 
-
 depends 'apt'
 depends 'yum'
 depends 'build-essential'
