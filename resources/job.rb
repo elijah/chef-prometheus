@@ -23,6 +23,8 @@ action :create do
 
       action :nothing
       delayed_action :create
+
+      not_if { node['prometheus']['allow_external_config'] }
     end
   end
 end

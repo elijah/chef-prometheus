@@ -10,5 +10,9 @@ env:
 before_install:
   - sudo apt-get -y -qq install libgecode-dev
 
+install:
+- bundle install
+- bundle exec berks install
+
 script:
   - bundle exec rake travis:ci
