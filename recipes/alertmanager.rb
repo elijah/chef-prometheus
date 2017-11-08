@@ -104,7 +104,7 @@ when 'systemd'
     notifies :restart, 'service[alertmanager]', :delayed
   end
 
-  service 'prometheus' do
+  service 'alertmanager' do
     supports :status => true, :restart => true
     action [:enable, :start]
   end
