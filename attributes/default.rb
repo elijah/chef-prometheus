@@ -109,7 +109,6 @@ default['prometheus']['v2_cli_opts']['alertmanager.notification-queue-capacity']
 
 # The URL of the alert manager to send notifications to.
 default['prometheus']['flags']['alertmanager.url']                                        = 'http://127.0.0.1/alert-manager/'
-default['prometheus']['v2_cli_opts']['alertmanager.url']                                  = 'http://127.0.0.1/alert-manager/'
 
 # Maximum number of queries executed concurrently.
 default['prometheus']['flags']['query.max-concurrency']                                   = 20
