@@ -34,7 +34,6 @@ when 'bluepill'
     action [:enable, :load]
   end
 when 'systemd'
-  # rubocop:disable Style/HashSyntax
   dist_dir, conf_dir, env_file = value_for_platform_family(
     ['fedora'] => %w(fedora sysconfig prometheus),
     ['rhel'] => %w(redhat sysconfig prometheus),
@@ -44,7 +43,7 @@ when 'systemd'
   template '/etc/systemd/system/prometheus.service' do
     source 'systemd/prometheus.service.erb'
     mode '0644'
-    variables(:sysconfig_file => "/etc/#{conf_dir}/#{env_file}")
+    variables(sysconfig_file: "/etc/#{conf_dir}/#{env_file}")
     notifies :restart, 'service[prometheus]', :delayed
   end
 
@@ -55,10 +54,9 @@ when 'systemd'
   end
 
   service 'prometheus' do
-    supports :status => true, :restart => true
+    supports status: true, restart: true
     action [:enable, :start]
   end
-  # rubocop:enable Style/HashSyntax
 when 'upstart'
   template '/etc/init/prometheus.conf' do
     source 'upstart/prometheus.service.erb'
@@ -80,8 +78,6 @@ else
   end
 end
 
-# rubocop:disable Style/HashSyntax
 service 'prometheus' do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
 end
-# rubocop:enable Style/HashSyntax

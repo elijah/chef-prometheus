@@ -1,6 +1,4 @@
 require 'spec_helper'
-
-# rubocop:disable Metrics/BlockLength
 describe 'prometheus::default' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/tmp/chef/cache').converge(described_recipe)

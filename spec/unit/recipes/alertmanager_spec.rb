@@ -8,8 +8,6 @@
 require 'spec_helper'
 
 # Caution: This is a carbon-copy of default_spec.rb with some variable replacements.
-
-# rubocop:disable Metrics/BlockLength
 describe 'prometheus::alertmanager' do
   let(:chef_run) do
     ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/tmp/chef/cache').converge(described_recipe)

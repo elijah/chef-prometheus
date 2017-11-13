@@ -1,7 +1,7 @@
 name             'prometheus'
 maintainer       'Elijah Wright'
 maintainer_email 'elijah.wright@gmail.com'
-license          'Apache 2.0'
+license          'Apache-2.0'
 description      'Installs/Configures Prometheus'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.6.4'

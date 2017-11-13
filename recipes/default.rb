@@ -60,7 +60,7 @@ template node['prometheus']['flags']['config.file'] do
   variables(
     rule_filenames: node['prometheus']['rule_filenames']
   )
-  notifies  :reload, 'service[prometheus]'
+  notifies :reload, 'service[prometheus]'
 end
 
 # monitor our server instance
