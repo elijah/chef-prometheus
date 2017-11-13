@@ -11,7 +11,7 @@ default_action :create
 
 action :create do
   with_run_context :root do
-    edit_resource(:template, config_file) do |new_resource|
+    edit_resource(:template, new_resource.config_file) do |new_resource|
       cookbook new_resource.source
       variables[:jobs] ||= {}
       variables[:jobs][new_resource.name] ||= {}

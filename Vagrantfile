@@ -78,13 +78,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       mysql: {
         server_root_password: 'rootpass',
         server_debian_password: 'debpass',
-        server_repl_password: 'replpass'
-      }
+        server_repl_password: 'replpass',
+      },
     }
 
     chef.run_list = [
       'recipe[prometheus::default]',
-      'recipe[prometheus::alertmanager]'
+      'recipe[prometheus::alertmanager]',
     ]
   end
 end

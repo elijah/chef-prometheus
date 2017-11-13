@@ -16,26 +16,24 @@ default['prometheus']['pid']                                                    
 default['prometheus']['install_method']                                                   = 'binary'
 
 # Init style.
-# rubocop:disable Style/ConditionalAssignment
-case node['platform_family']
-when 'debian'
-  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
-    default['prometheus']['init_style'] = 'upstart'
-  elsif node['platform'] == 'debian' && node['platform_version'].to_f < 8.0
-    default['prometheus']['init_style'] = 'runit'
-  else
-    default['prometheus']['init_style'] = 'systemd'
-  end
-when 'rhel', 'fedora'
-  if node['platform_version'].to_i >= 7
-    default['prometheus']['init_style']                                                   = 'systemd'
-  else
-    default['prometheus']['init_style']                                                   = 'init'
-  end
-else
-  default['prometheus']['init_style']                                                     = 'init'
-end
-# rubocop:enable Style/ConditionalAssignment
+default['prometheus']['init_style'] = case node['platform_family']
+                                      when 'debian'
+                                        if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
+                                          'upstart'
+                                        elsif node['platform'] == 'debian' && node['platform_version'].to_f < 8.0
+                                          'runit'
+                                        else
+                                          'systemd'
+                                        end
+                                      when 'rhel', 'fedora'
+                                        if node['platform_version'].to_i >= 7
+                                          'systemd'
+                                        else
+                                          'init'
+                                        end
+                                      else
+                                        'init'
+                                      end
 
 # Location for Prometheus logs
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
@@ -88,8 +86,8 @@ default['prometheus']['job_config_cookbook_name']                               
 # Prometheus configuration file name.
 
 default['prometheus']['v2_cli_flags']                                                     = [
-                                                                                               'web.enable-lifecycle'
-                                                                                            ]
+  'web.enable-lifecycle',
+]
 
 default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
 default['prometheus']['v2_cli_opts']['config.file']                                       = "#{node['prometheus']['dir']}/prometheus.yml"
@@ -214,7 +212,7 @@ default['prometheus']['flags']['web.telemetry-path']                            
 # web.use-local-assets flag got removed in 0.17
 # https://github.com/prometheus/prometheus/commit/a542cc86096e1bad694e04d307301a807583dfc6
 if Gem::Version.new(node['prometheus']['version']) <= Gem::Version.new('0.16.2')
-  default['prometheus']['flags']['web.use-local-assets']                                  = false
+  default['prometheus']['flags']['web.use-local-assets'] = false
 end
 
 # Path to static asset directory, available at /user.

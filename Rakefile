@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'cookstyle'
 require 'rubocop/rake_task'
 require 'foodcritic'
 require 'kitchen'
@@ -7,15 +8,18 @@ require 'rspec/core/rake_task'
 # Unit Tests. rspec/chefspec
 RSpec::Core::RakeTask.new(:unit)
 
-# Style tests. Rubocop and Foodcritic
+# Style tests. Cookstyle and Foodcritic
 namespace :style do
   desc 'Run Ruby style checks'
-  RuboCop::RakeTask.new(:ruby)
+  # RuboCop::RakeTask.new(:ruby)
+  RuboCop::RakeTask.new(:ruby) do |task|
+    task.options << '--display-cop-names'
+  end
 
   desc 'Run Chef style checks'
   FoodCritic::Rake::LintTask.new(:chef) do |t|
     t.options = {
-      fail_tags: ['any']
+      fail_tags: ['any'],
     }
   end
 end

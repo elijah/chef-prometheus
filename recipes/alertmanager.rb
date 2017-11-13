@@ -58,7 +58,7 @@ template node['prometheus']['alertmanager']['config.file'] do
   variables(
     notification_config: node['prometheus']['alertmanager']['notification']
   )
-  notifies  :restart, 'service[alertmanager]'
+  notifies :restart, 'service[alertmanager]'
 end
 
 # -- Do the install -- #
@@ -84,7 +84,6 @@ when 'bluepill'
     action [:enable, :load]
   end
 when 'systemd'
-  # rubocop:disable Style/HashSyntax
   dist_dir, conf_dir, env_file = value_for_platform_family(
     ['fedora'] => %w(fedora sysconfig alertmanager),
     ['rhel'] => %w(redhat sysconfig alertmanager),
@@ -94,7 +93,7 @@ when 'systemd'
   template '/etc/systemd/system/alertmanager.service' do
     source 'systemd/alertmanager.service.erb'
     mode '0644'
-    variables(:sysconfig_file => "/etc/#{conf_dir}/#{env_file}")
+    variables(sysconfig_file: "/etc/#{conf_dir}/#{env_file}")
     notifies :restart, 'service[alertmanager]', :delayed
   end
 
@@ -105,10 +104,9 @@ when 'systemd'
   end
 
   service 'alertmanager' do
-    supports :status => true, :restart => true
+    supports status: true, restart: true
     action [:enable, :start]
   end
-  # rubocop:enable Style/HashSyntax
 when 'upstart'
   template '/etc/init/alertmanager.conf' do
     source 'upstart/alertmanager.service.erb'
@@ -130,11 +128,9 @@ else
   end
 end
 
-# rubocop:disable Style/HashSyntax
 service 'alertmanager' do
-  supports :status => true, :restart => true
+  supports status: true, restart: true
 end
-# rubocop:enable Style/HashSyntax
 
 service 'alertmanager' do
   action [:enable, :start]

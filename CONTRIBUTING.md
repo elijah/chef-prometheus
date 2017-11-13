@@ -14,10 +14,10 @@ Coding Standards
 The submitted code should be compatible with the standard Ruby coding guidelines.
 Here are some additional resources:
 
-- [Ruby Style Guide](https://github.com/bbatsov/ruby-style-guide)
+- [Cookstyle Guide](https://github.com/chef/cookstyle)
 - [GitHub Styleguide](https://github.com/styleguide/ruby)
 
-This cookbook is equipped with Rubocop, which will fail the build for violating
+This cookbook is equipped with Cookstyle, which will fail the build for violating
 these standards.
 
 Testing
@@ -29,7 +29,7 @@ re-introduced.
 
 We understand that not all users are familiar with the testing ecosystem. This
 cookbook is fully-tested using [Foodcritic](https://github.com/acrmp/foodcritic),
-[Rubocop](https://github.com/bbatsov/rubocop),
+[Cookstyle](https://github.com/chef/cookstyle),
 and [Test Kitchen](https://github.com/test-kitchen/test-kitchen) with
 [Serverspec](https://github.com/serverspec/serverspec) bussers.
 
@@ -39,9 +39,9 @@ Process
 
         $ git clone git@github.com:rayrod2030/chef-prometheus.git
 
-2. Make sure you have a sane [ChefDK][] development environment:
+2. Make sure you have a sane [ChefDK][] development environment (2.X):
 
-        $ chef version
+        $ chef --version
 
 3. Make any changes
 4. Write tests to support those changes.
