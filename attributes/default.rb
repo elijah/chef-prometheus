@@ -202,7 +202,7 @@ default['prometheus']['flags']['web.enable-remote-shutdown']                    
 # example, if Prometheus is served via a reverse proxy). Used for
 # generating relative and absolute links back to Prometheus itself. If
 # omitted, relevant URL components will be derived automatically.
-default['prometheus']['flags']['web.external-url']                                        = ''
+default['prometheus']['flags']['web.external-url']                                        = 'http://127.0.0.1/alert-manager/'
 
 # Address to listen on for the web interface, API, and telemetry.
 default['prometheus']['flags']['web.listen-address']                                      = ':9090'
