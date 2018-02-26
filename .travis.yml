@@ -1,18 +1,25 @@
-rvm:
-  - 2.3.1
-  - 2.4.1
+dist: trusty
+sudo: false
+addons:
+  apt:
+    sources:
+      - chef-current-trusty
+    packages:
+      - chefdk
 
-bundler_args: --without development integration kitchen_docker kitchen_vagrant kitchen_cloud
+# Don't `bundle install`
+install: echo "skip bundle install"
 
-env:
-  - USE_SYSTEM_GECODE=1
+branches:
+  only:
+    - master
 
-before_install:
-  - sudo apt-get -y -qq install libgecode-dev
-
-install:
-- bundle install
-- bundle exec berks install
+# Ensure we make ChefDK's Ruby the default
+before_script:
+  - eval "$(chef shell-init bash)"
 
 script:
-  - bundle exec rake travis:ci
+  - chef --version
+  - cookstyle --version
+  - foodcritic --version
+  - chef exec delivery local all
