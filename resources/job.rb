@@ -1,4 +1,3 @@
-property :name,                String, name_property: true, required: true
 property :scrape_interval,     String
 property :scrape_timeout,      String
 property :labels,              Hash
