@@ -8,6 +8,7 @@ EnvironmentFile=<%= @sysconfig_file %>
 User=<%= node['prometheus']['user'] %>
 Group=<%= node['prometheus']['group'] %>
 ExecStart=<%= node['prometheus']['binary'] %> <%= generate_flags %>
+ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 
 [Install]

@@ -18,9 +18,10 @@
 #
 
 include_recipe 'build-essential::default'
+include_recipe 'golang::default'
 
 # These packages are needed go build
-%w( curl git-core mercurial gzip sed ).each do |pkg|
+%w(curl git-core mercurial gzip sed).each do |pkg|
   package pkg
 end
 
@@ -32,6 +33,7 @@ end
 
 bash 'compile_prometheus_source' do
   cwd "#{Chef::Config[:file_cache_path]}/prometheus-#{node['prometheus']['version']}"
+  environment 'PATH' => "/usr/local/go/bin:#{ENV['PATH']}", 'GOPATH' => "/opt/go:#{node['go']['gopath']}:/opt/go/src/github.com/prometheus/promu/vendor"
   code <<-EOH
     make build &&
     mv prometheus #{node['prometheus']['dir']} &&

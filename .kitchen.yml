@@ -3,23 +3,19 @@ driver:
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: 12.0.3
   data_path: test/shared
 
 platforms:
   - name: ubuntu-14.04
-    run_list:
-      - recipe[apt]
-  - name: ubuntu-12.04
-    run_list:
-      - recipe[apt]
-  - name: debian-7.7
-    run_list:
-      - recipe[apt]
-  - name: centos-6.6
+  - name: ubuntu-16.04
+  - name: debian-7.11
+    driver:
+      cache_directory: false
+  - name: debian-8.7
+  - name: centos-6.9
     run_list:
       - recipe[yum::default]
-  - name: centos-7.0
+  - name: centos-7.3
     run_list:
       - recipe[yum::default]
 
@@ -27,31 +23,12 @@ suites:
   - name: default
     run_list:
         - recipe[prometheus::default]
-    attributes:
-
-  - name: init
-    run_list:
-        - recipe[prometheus::default]
-    provisioner:
-        name: chef_zero
-        require_chef_omnibus: 11.12.4
-    attributes:
-      prometheus:
-        init_style: 'init'
-
-  - name: bluepill
-    run_list:
-        - recipe[prometheus::default]
-    attributes:
-      prometheus:
-        init_style: 'bluepill'
-
-  - name: default-binary
-    run_list:
-        - recipe[prometheus::default]
+        - recipe[prometheus::alertmanager]
     attributes:
       prometheus:
         install_method: 'binary'
+        alertmanager:
+          install_method: 'binary'
 
   - name: init-binary
     run_list:
@@ -63,10 +40,36 @@ suites:
         flags:
           storage.remote.timeout: 45s
 
-  - name: bluepill-binary
+  - name: default-source
     run_list:
         - recipe[prometheus::default]
     attributes:
+      go:
+        gobin: '/usr/local/go/bin'
+        gopath: '/usr/local/go'
+
+  - name: init
+    run_list:
+        - recipe[prometheus::default]
+    provisioner:
+        name: chef_zero
+        require_chef_omnibus: 11.12.4
+    attributes:
       prometheus:
-        init_style: 'bluepill'
-        install_method: 'binary'
+        init_style: 'init'
+
+#  - name: bluepill
+#    run_list:
+#        - recipe[prometheus::default]
+#    attributes:
+#      prometheus:
+#        init_style: 'bluepill'
+
+#  - name: bluepill-binary
+#    run_list:
+#        - recipe[prometheus::default]
+#    attributes:
+#      prometheus:
+#        init_style: 'bluepill'
+#        install_method: 'binary'
+

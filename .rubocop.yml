@@ -1,7 +1,8 @@
 AllCops:
   Exclude:
-    - vendor/**
-    - .kitchen/**
+    - vendor/**/*
+    - .kitchen/**/*
+    - Vagrantfile
 
 ClassLength:
   Enabled: false
@@ -22,5 +23,13 @@ Metrics/LineLength:
   Enabled: false
 Style/ExtraSpacing:
   Enabled: false
-Style/SingleSpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+Style/PercentLiteralDelimiters:
+  Enabled: false
+Style/SymbolArray:
   Enabled: false

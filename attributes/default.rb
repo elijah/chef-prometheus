@@ -12,16 +12,19 @@ default['prometheus']['binary']                                                 
 # Location of Prometheus pid file
 default['prometheus']['pid']                                                              = '/var/run/prometheus.pid'
 
-# Install method.  Currently supports source and binary.
-default['prometheus']['install_method']                                                   = 'source'
+# Install method.  Currently supports source, binary and shell_binary.
+default['prometheus']['install_method']                                                   = 'binary'
 
 # Init style.
+# rubocop:disable Style/ConditionalAssignment
 case node['platform_family']
 when 'debian'
-  if node['platform'] == 'ubuntu'
-    default['prometheus']['init_style']                                                   = 'upstart'
+  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
+    default['prometheus']['init_style'] = 'upstart'
+  elsif node['platform'] == 'debian' && node['platform_version'].to_f < 8.0
+    default['prometheus']['init_style'] = 'runit'
   else
-    default['prometheus']['init_style']                                                   = 'runit'
+    default['prometheus']['init_style'] = 'systemd'
   end
 when 'rhel', 'fedora'
   if node['platform_version'].to_i >= 7
@@ -32,19 +35,20 @@ when 'rhel', 'fedora'
 else
   default['prometheus']['init_style']                                                     = 'init'
 end
+# rubocop:enable Style/ConditionalAssignment
 
 # Location for Prometheus logs
 default['prometheus']['log_dir']                                                          = '/var/log/prometheus'
 
 # Prometheus version to build
-default['prometheus']['version']                                                          = '0.15.1'
+default['prometheus']['version']                                                          = '1.6.3'
 
 # Prometheus source repository.
 default['prometheus']['source']['git_repository']                                         = 'https://github.com/prometheus/prometheus.git'
 
 # Prometheus source repository git reference.  Defaults to version tag.  Can
 # also be set to a branch or master.
-default['prometheus']['source']['git_revision']                                           = node['prometheus']['version']
+default['prometheus']['source']['git_revision']                                           = "v#{node['prometheus']['version']}"
 
 # System user to use
 default['prometheus']['user']                                                             = 'prometheus'
@@ -57,11 +61,11 @@ default['prometheus']['use_existing_user']                                      
 
 # Location for Prometheus pre-compiled binary.
 # Default for testing purposes
-default['prometheus']['binary_url']                                                       = 'https://github.com/prometheus/prometheus/releases/download/0.15.1/prometheus-0.15.1.linux-amd64.tar.gz'
+default['prometheus']['binary_url']                                                       = "https://github.com/prometheus/prometheus/releases/download/v#{node['prometheus']['version']}/prometheus-#{node['prometheus']['version']}.linux-amd64.tar.gz"
 
 # Checksum for pre-compiled binary
 # Default for testing purposes
-default['prometheus']['checksum']                                                         = '4b283ce4bf194619d03883a9cf23bd4566a5e5c3cc483b1192a1cd3c4a756118'
+default['prometheus']['checksum']                                                         = 'bb4e3bf4c9cd2b30fc922e48ab584845739ed4aa50dea717ac76a56951e31b98'
 
 # If file extension of your binary can not be determined by the URL
 # then define it here. Example 'tar.bz2'
@@ -82,28 +86,41 @@ default['prometheus']['job_config_cookbook_name']                               
 # generate the command line flags for the Prometheus executable.
 
 # Prometheus configuration file name.
+
+default['prometheus']['v2_cli_flags']                                                     = [
+                                                                                               'web.enable-lifecycle'
+                                                                                            ]
+
 default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
+default['prometheus']['v2_cli_opts']['config.file']                                       = "#{node['prometheus']['dir']}/prometheus.yml"
 
 # Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal, panic].
 default['prometheus']['flags']['log.level']                                               = 'info'
+default['prometheus']['v2_cli_opts']['log.level']                                         = 'info'
 
 # Alert manager HTTP API timeout.
-default['prometheus']['flags']['alertmanager.http-deadline']                              = '10s'
+timeout_flag = Gem::Version.new(node['prometheus']['version']) <= Gem::Version.new('0.16.2') ? 'http-deadline' : 'timeout'
+default['prometheus']['flags']["alertmanager.#{timeout_flag}"]                            = '10s'
+default['prometheus']['v2_cli_opts']["alertmanager.#{timeout_flag}"]                      = '10s'
 
 # The capacity of the queue for pending alert manager notifications.
 default['prometheus']['flags']['alertmanager.notification-queue-capacity']                = 100
+default['prometheus']['v2_cli_opts']['alertmanager.notification-queue-capacity']          = 100
 
 # The URL of the alert manager to send notifications to.
-default['prometheus']['flags']['alertmanager.url']                                        = ''
+default['prometheus']['flags']['alertmanager.url']                                        = 'http://127.0.0.1/alert-manager/'
 
 # Maximum number of queries executed concurrently.
 default['prometheus']['flags']['query.max-concurrency']                                   = 20
+default['prometheus']['v2_cli_opts']['query.max-concurrency']                             = 20
 
 # Staleness delta allowance during expression evaluations.
-default['prometheus']['flags']['query.staleness-delta']                                   = '5m0s'
+default['prometheus']['flags']['query.staleness-delta']                                   = '5m'
+default['prometheus']['v2_cli_opts']['query.lookback-delta']                              = '5m'
 
 # Maximum time a query may take before being aborted.
-default['prometheus']['flags']['query.timeout']                                           = '2m0s'
+default['prometheus']['flags']['query.timeout']                                           = '2m'
+default['prometheus']['v2_cli_opts']['query.timeout']                                     = '2m'
 
 # If approx. that many time series are in a state that would require a recovery
 # operation after a crash, a checkpoint is triggered, even if the checkpoint interval
@@ -114,7 +131,7 @@ default['prometheus']['flags']['query.timeout']                                 
 default['prometheus']['flags']['storage.local.checkpoint-dirty-series-limit']             = 5000
 
 # The period at which the in-memory index of time series is checkpointed.
-default['prometheus']['flags']['storage.local.checkpoint-interval']                       = '5m0s'
+default['prometheus']['flags']['storage.local.checkpoint-interval']                       = '5m'
 
 # If set, the local storage layer will perform crash recovery even if the last
 # shutdown appears to be clean.
@@ -138,7 +155,8 @@ default['prometheus']['flags']['storage.local.index-cache-size.label-pair-to-fin
 default['prometheus']['flags']['storage.local.memory-chunks']                             = 1048576
 
 # Base path for metrics storage.
-default['prometheus']['flags']['storage.local.path']                                      = '/tmp/metrics'
+default['prometheus']['flags']['storage.local.path']                                      = '/var/lib/prometheus'
+default['prometheus']['v2_cli_opts']['storage.tsdb.path']                                 = '/var/lib/prometheus'
 
 # If set, a crash recovery will perform checks on each series file. This might take a very long time.
 default['prometheus']['flags']['storage.local.pedantic-checks']                           = false
@@ -168,6 +186,9 @@ default['prometheus']['flags']['storage.remote.opentsdb-url']                   
 # The timeout to use when sending samples to the remote storage.
 default['prometheus']['flags']['storage.remote.timeout']                                  = '30s'
 
+# prometheus v2.x flags
+default['prometheus']['flags']['storage.remote.timeout']                                  = '30s'
+
 # Path to the console library directory.
 default['prometheus']['flags']['web.console.libraries']                                   = 'console_libraries'
 
@@ -181,7 +202,7 @@ default['prometheus']['flags']['web.enable-remote-shutdown']                    
 # example, if Prometheus is served via a reverse proxy). Used for
 # generating relative and absolute links back to Prometheus itself. If
 # omitted, relevant URL components will be derived automatically.
-default['prometheus']['flags']['web.web.external-url']                                    = ''
+default['prometheus']['flags']['web.external-url']                                        = ''
 
 # Address to listen on for the web interface, API, and telemetry.
 default['prometheus']['flags']['web.listen-address']                                      = ':9090'
@@ -190,16 +211,25 @@ default['prometheus']['flags']['web.listen-address']                            
 default['prometheus']['flags']['web.telemetry-path']                                      = '/metrics'
 
 # Read assets/templates from file instead of binary.
-default['prometheus']['flags']['web.use-local-assets']                                    = false
+# web.use-local-assets flag got removed in 0.17
+# https://github.com/prometheus/prometheus/commit/a542cc86096e1bad694e04d307301a807583dfc6
+if Gem::Version.new(node['prometheus']['version']) <= Gem::Version.new('0.16.2')
+  default['prometheus']['flags']['web.use-local-assets']                                  = false
+end
 
 # Path to static asset directory, available at /user.
 default['prometheus']['flags']['web.user-assets']                                         = ''
+
+# Alertmanager attributes
+
+# Install method. Currently supports source and binary.
+default['prometheus']['alertmanager']['install_method']                                   = 'source'
 
 # Location of Alertmanager binary
 default['prometheus']['alertmanager']['binary']                                           = "#{node['prometheus']['dir']}/alertmanager"
 
 # Alertmanager version to build
-default['prometheus']['alertmanager']['version']                                          = '0.0.4'
+default['prometheus']['alertmanager']['version']                                          = '0.6.2'
 
 # Alertmanager source repository.
 default['prometheus']['alertmanager']['git_repository']                                   = 'https://github.com/prometheus/alertmanager.git'
@@ -208,8 +238,23 @@ default['prometheus']['alertmanager']['git_repository']                         
 # also be set to a branch or master.
 default['prometheus']['alertmanager']['git_revision']                                     = node['prometheus']['alertmanager']['version']
 
+# Location for Alertmanager pre-compiled binary.
+# Default for testing purposes
+default['prometheus']['alertmanager']['binary_url']                                       = 'https://github.com/prometheus/alertmanager/releases/download/v0.6.2/alertmanager-0.6.2.linux-amd64.tar.gz'
+
+# Checksum for pre-compiled binary
+# Default for testing purposes
+default['prometheus']['alertmanager']['checksum']                                         = '8b796592b974a1aa51cac4e087071794989ecc957d4e90025d437b4f7cad214a'
+
+# If file extension of your binary can not be determined by the URL
+# then define it here. Example 'tar.bz2'
+default['prometheus']['alertmanager']['file_extension']                                   = ''
+
 # Alertmanager configuration file name.
 default['prometheus']['alertmanager']['config.file']                                      = "#{node['prometheus']['dir']}/alertmanager.conf"
+
+# Alertmanager configuration storage directory
+default['prometheus']['alertmanager']['storage.path']                                     = "#{node['prometheus']['dir']}/data"
 
 # Alertmanager configuration chef template name.
 default['prometheus']['alertmanager']['config_cookbook_name']                             = 'prometheus'
@@ -219,11 +264,10 @@ default['prometheus']['alertmanager']['config_cookbook_name']                   
 # templates and recipes to configure Alertmanager.
 default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.conf.erb'
 
-# Service key to use when Alertmanager notifies Pager Duty
-default['prometheus']['alertmanager']['pagerduty_service_key']                            = 'supersecretapikey'
+# Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
+default['prometheus']['rule_filenames']                                                   = nil
 
-# Auth token to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_auth_token']                               = 'hipchatauthtoken'
+default['prometheus']['alertmanager']['notification'] = {}
 
-# Room ID to use when Alertmanager notifies HipChat
-default['prometheus']['alertmanager']['hipchat_room_id']                                  = 123456
+default['prometheus']['global']['scrape_interval'] = '60s'
+default['prometheus']['global']['evaluation_interval'] = '60s'

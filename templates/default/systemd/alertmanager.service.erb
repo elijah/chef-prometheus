@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Alertmanager
+After=network.target
+
+[Service]
+ExecStart=<%= node['prometheus']['alertmanager']['binary'] %> \
+    -log.level=debug \
+    -storage.path=<%= node['prometheus']['alertmanager']['storage.path'] %> \
+    -config.file=<%=  node['prometheus']['alertmanager']['config.file'] %> \
+    -web.external-url=<%= node['prometheus']['flags']['alertmanager.url'] %>
+User=<%= node['prometheus']['user'] %>
+Group=<%= node['prometheus']['group'] %>
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

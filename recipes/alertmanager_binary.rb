@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: prometheus
-# Recipe:: binary
+# Recipe:: alertmanager_binary
 #
-# Author: Kristian Jarvenpaa <kristian.jarvenpaa@gmail.com>
+# Author: Javier Zunzunegui <javier.zunzunegui.b@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ dir_name = ::File.basename(node['prometheus']['dir'])
 dir_path = ::File.dirname(node['prometheus']['dir'])
 
 ark dir_name do
-  url node['prometheus']['binary_url']
-  checksum node['prometheus']['checksum']
-  version node['prometheus']['version']
+  url node['prometheus']['alertmanager']['binary_url']
+  checksum node['prometheus']['alertmanager']['checksum']
+  version node['prometheus']['alertmanager']['version']
   prefix_root Chef::Config['file_cache_path']
   path dir_path
   owner node['prometheus']['user']
   group node['prometheus']['group']
-  extension node['prometheus']['file_extension'] unless node['prometheus']['file_extension'].empty?
+  extension node['prometheus']['alertmanager']['file_extension'] unless node['prometheus']['alertmanager']['file_extension'].empty?
   action :put
 end

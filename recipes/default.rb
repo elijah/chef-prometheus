@@ -37,16 +37,30 @@ directory node['prometheus']['log_dir'] do
   recursive true
 end
 
+directory node['prometheus']['flags']['storage.local.path'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
+apt_update 'please'
+# Ensure that any unpacking of prometheus doesn't blow away our own configuration
+include_recipe "prometheus::#{node['prometheus']['install_method']}"
+
 # -- Write our Config -- #
 
 template node['prometheus']['flags']['config.file'] do
   action    :nothing
   cookbook  node['prometheus']['job_config_cookbook_name']
   source    node['prometheus']['job_config_template_name']
-  mode      0644
+  mode      '0644'
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
-  notifies  :restart, 'service[prometheus]'
+  variables(
+    rule_filenames: node['prometheus']['rule_filenames']
+  )
+  notifies  :reload, 'service[prometheus]'
 end
 
 # monitor our server instance
@@ -56,17 +70,6 @@ prometheus_job 'prometheus' do
   metrics_path      node['prometheus']['flags']['web.telemetry-path']
 end
 
-accumulator node['prometheus']['flags']['config.file'] do
-  filter        { |res| res.is_a? Chef::Resource::PrometheusJob }
-  target        template: node['prometheus']['flags']['config.file']
-  transform     { |jobs| jobs.sort_by(&:name) }
-  variable_name :jobs
-  notifies      :restart, 'service[prometheus]'
-
-  not_if { node['prometheus']['allow_external_config'] && File.exist?(node['prometheus']['flags']['config.file']) }
-end
-
 # -- Do the install -- #
 
-include_recipe "prometheus::#{node['prometheus']['install_method']}"
 include_recipe 'prometheus::service'

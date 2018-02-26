@@ -40,46 +40,94 @@ directory node['prometheus']['log_dir'] do
   recursive true
 end
 
+directory node['prometheus']['alertmanager']['storage.path'] do
+  owner node['prometheus']['user']
+  group node['prometheus']['group']
+  mode '0755'
+  recursive true
+end
+
 # -- Write our Config -- #
 
 template node['prometheus']['alertmanager']['config.file'] do
   cookbook  node['prometheus']['alertmanager']['config_cookbook_name']
   source    node['prometheus']['alertmanager']['config_template_name']
-  mode      0644
+  mode      '0644'
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
+  variables(
+    notification_config: node['prometheus']['alertmanager']['notification']
+  )
   notifies  :restart, 'service[alertmanager]'
 end
 
 # -- Do the install -- #
 
-# These packages are needed go build
-%w( curl git-core mercurial gzip sed ).each do |pkg|
-  package pkg
-end
+include_recipe "prometheus::alertmanager_#{node['prometheus']['alertmanager']['install_method']}"
 
-git "#{Chef::Config[:file_cache_path]}/alertmanager-#{node['prometheus']['alertmanager']['version']}" do
-  repository node['prometheus']['alertmanager']['git_repository']
-  revision node['prometheus']['alertmanager']['git_revision']
-  action :checkout
-end
+case node['prometheus']['init_style']
+when 'runit'
+  include_recipe 'runit::default'
 
-bash 'compile_alertmanager_source' do
-  cwd "#{Chef::Config[:file_cache_path]}/alertmanager-#{node['prometheus']['alertmanager']['version']}"
-  code "make && mv alertmanager #{node['prometheus']['dir']}"
+  runit_service 'alertmanager' do
+    default_logger true
+  end
+when 'bluepill'
+  include_recipe 'bluepill::default'
 
-  notifies :restart, 'service[alertmanager]'
-end
+  template "#{node['bluepill']['conf_dir']}/alertmanager.pill" do
+    source 'alertmanager.pill.erb'
+    mode '0644'
+  end
 
-template '/etc/init/alertmanager.conf' do
-  source 'upstart/alertmanager.service.erb'
-  mode 0644
-  notifies :restart, 'service[alertmanager]', :delayed
-end
+  bluepill_service 'alertmanager' do
+    action [:enable, :load]
+  end
+when 'systemd'
+  # rubocop:disable Style/HashSyntax
+  dist_dir, conf_dir, env_file = value_for_platform_family(
+    ['fedora'] => %w(fedora sysconfig alertmanager),
+    ['rhel'] => %w(redhat sysconfig alertmanager),
+    ['debian'] => %w(debian default alertmanager)
+  )
 
-service 'alertmanager' do
-  provider Chef::Provider::Service::Upstart
-  action [:enable, :start]
+  template '/etc/systemd/system/alertmanager.service' do
+    source 'systemd/alertmanager.service.erb'
+    mode '0644'
+    variables(:sysconfig_file => "/etc/#{conf_dir}/#{env_file}")
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
+
+  template "/etc/#{conf_dir}/#{env_file}" do
+    source "#{dist_dir}/#{conf_dir}/alertmanager.erb"
+    mode '0644'
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
+
+  service 'alertmanager' do
+    supports :status => true, :restart => true
+    action [:enable, :start]
+  end
+  # rubocop:enable Style/HashSyntax
+when 'upstart'
+  template '/etc/init/alertmanager.conf' do
+    source 'upstart/alertmanager.service.erb'
+    mode '0644'
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
+
+  service 'alertmanager' do
+    provider Chef::Provider::Service::Upstart
+    action [:enable, :start]
+  end
+else
+  template '/etc/init.d/alertmanager' do
+    source 'alertmanager.init.erb'
+    owner 'root'
+    group node['root_group']
+    mode '0755'
+    notifies :restart, 'service[alertmanager]', :delayed
+  end
 end
 
 # rubocop:disable Style/HashSyntax
@@ -87,3 +135,7 @@ service 'alertmanager' do
   supports :status => true, :restart => true
 end
 # rubocop:enable Style/HashSyntax
+
+service 'alertmanager' do
+  action [:enable, :start]
+end

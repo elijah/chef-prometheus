@@ -8,6 +8,7 @@ setuid <%= node['prometheus']['user'] %>
 setgid <%= node['prometheus']['user'] %>
 
 script
+  chdir <%= node['prometheus']['dir'] %>
   exec >> "<%= node['prometheus']['log_dir'] %>/prometheus.log"
   exec 2>&1
   exec <%= node['prometheus']['binary'] %> <%= generate_flags %>

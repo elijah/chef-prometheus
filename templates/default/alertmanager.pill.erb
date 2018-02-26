@@ -1,0 +1,14 @@
+
+Bluepill.application('alertmanager') do |app|
+  app.process('alertmanager') do |process|
+    process.pid_file = "<%= node['prometheus']['pid'] %>"
+    process.working_dir = "<%= node['prometheus']['dir'] %>"
+    process.start_command = "<%= node['prometheus']['alertmanager']['binary'] %> -log.level=debug \
+        -storage.path="<%= node['prometheus']['dir'] %>/data" \
+        -config.file="<%= node['prometheus']['alertmanager']['config.file'] %>" \
+        -web.external-url="<%= node['prometheus']['flags']['alertmanager.url'] %>"
+    process.environment = {'GOMAXPROCS' => <%= node['cpu']['total'] %>}
+    process.stdout = process.stderr = "<%= node['prometheus']['log_dir'] %>/alertmanager.log"
+    process.daemonize = true
+  end
+end
