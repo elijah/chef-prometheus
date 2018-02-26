@@ -47,9 +47,8 @@ describe 'prometheus::default' do
   end
 
   it 'uses an attribute to select the prometheus.yml template' do
-    chef_run.node.default['prometheus']['job_config_cookbook_name'] = 'other_cookbook'
-    chef_run.converge(described_recipe) # The converge happens inside the test
-
+    chef_run.node.override['prometheus']['job_config_cookbook_name'] = 'other_cookbook'
+    chef_run.converge(described_recipe)
     expect(chef_run).to create_template('/opt/prometheus/prometheus.yml').with_cookbook('other_cookbook')
   end
 

@@ -5,14 +5,12 @@ property :labels,              Hash
 property :target,              [Array, String]
 property :metrics_path,        String, default: '/metrics'
 property :config_file,         String, default: lazy { node['prometheus']['flags']['config.file'] }
-property :source, String, default: 'prometheus'
 
 default_action :create
 
 action :create do
   with_run_context :root do
     edit_resource(:template, config_file) do |new_resource|
-      cookbook new_resource.source
       variables[:jobs] ||= {}
       variables[:jobs][new_resource.name] ||= {}
       variables[:jobs][new_resource.name]['scrape_interval'] = new_resource.scrape_interval
