@@ -88,7 +88,7 @@ default['prometheus']['job_config_cookbook_name']                               
 # Prometheus configuration file name.
 
 default['prometheus']['v2_cli_flags']                                                     = [
-  'web.enable-lifecycle',
+  'web.enable-lifecycle'
 ]
 
 default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
