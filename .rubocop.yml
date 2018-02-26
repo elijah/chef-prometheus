@@ -33,3 +33,5 @@ Style/PercentLiteralDelimiters:
   Enabled: false
 Style/SymbolArray:
   Enabled: false
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: no_comma
