@@ -11,6 +11,9 @@ provisioner:
   name: dokken
   data_path: test/shared
 
+verifier:
+  sudo: false
+
 platforms:
   - name: ubuntu-14.04
   - name: ubuntu-16.04
@@ -20,9 +23,9 @@ platforms:
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
       - RUN /usr/bin/apt install sudo
-  - name: debian-7.11
-    driver:
-      cache_directory: false
+#  - name: debian-7.11
+#    driver:
+#      cache_directory: false
   - name: debian-8.7
     driver:
       image: dokken/debian-8
