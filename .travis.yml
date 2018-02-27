@@ -1,5 +1,5 @@
 dist: trusty
-sudo: false
+sudo: required
 addons:
   apt:
     sources:
@@ -10,16 +10,15 @@ addons:
 # Don't `bundle install`
 install: echo "skip bundle install"
 
-branches:
-  only:
-    - master
+services: docker
 
 # Ensure we make ChefDK's Ruby the default
 before_script:
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
   - eval "$(chef shell-init bash)"
+  - chef --version
 
 script:
-  - chef --version
   - cookstyle
   - foodcritic .
-  - chef exec delivery local all
+  - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml chef exec kitchen verify
