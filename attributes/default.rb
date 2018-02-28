@@ -33,7 +33,7 @@ when 'rhel', 'fedora'
     default['prometheus']['init_style']                                                   = 'init'
   end
 else
-  default['prometheus']['init_style']                                                     = 'init'
+  default['prometheus']['init_style'] = 'init'
 end
 # rubocop:enable Style/ConditionalAssignment
 
@@ -88,8 +88,8 @@ default['prometheus']['job_config_cookbook_name']                               
 # Prometheus configuration file name.
 
 default['prometheus']['v2_cli_flags']                                                     = [
-                                                                                               'web.enable-lifecycle'
-                                                                                            ]
+  'web.enable-lifecycle'
+]
 
 default['prometheus']['flags']['config.file']                                             = "#{node['prometheus']['dir']}/prometheus.yml"
 default['prometheus']['v2_cli_opts']['config.file']                                       = "#{node['prometheus']['dir']}/prometheus.yml"
@@ -214,7 +214,7 @@ default['prometheus']['flags']['web.telemetry-path']                            
 # web.use-local-assets flag got removed in 0.17
 # https://github.com/prometheus/prometheus/commit/a542cc86096e1bad694e04d307301a807583dfc6
 if Gem::Version.new(node['prometheus']['version']) <= Gem::Version.new('0.16.2')
-  default['prometheus']['flags']['web.use-local-assets']                                  = false
+  default['prometheus']['flags']['web.use-local-assets'] = false
 end
 
 # Path to static asset directory, available at /user.

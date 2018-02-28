@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'cookstyle'
 require 'rubocop/rake_task'
 require 'foodcritic'
 require 'kitchen'

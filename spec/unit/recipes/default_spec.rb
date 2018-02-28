@@ -1,9 +1,13 @@
 require 'spec_helper'
 
-# rubocop:disable Metrics/BlockLength
 describe 'prometheus::default' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/tmp/chef/cache').converge(described_recipe)
+    ChefSpec::SoloRunner.new(
+      platform: 'ubuntu',
+      version: '16.04',
+      file_cache_path: '/tmp/chef/cache',
+      step_into: ['prometheus_job']
+    ).converge(described_recipe)
   end
 
   before do
@@ -39,6 +43,12 @@ describe 'prometheus::default' do
   it 'renders a prometheus job configuration file and notifies prometheus to reload' do
     resource = chef_run.template('/opt/prometheus/prometheus.yml')
     expect(resource).to notify('service[prometheus]').to(:reload)
+  end
+
+  it 'uses an attribute to select the prometheus.yml template' do
+    chef_run.node.override['prometheus']['job_config_cookbook_name'] = 'other_cookbook'
+    chef_run.converge(described_recipe)
+    expect(chef_run).to create_template('/opt/prometheus/prometheus.yml').with_cookbook('other_cookbook')
   end
 
   # Test for source.rb
