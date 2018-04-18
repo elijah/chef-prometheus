@@ -76,7 +76,7 @@ describe 'prometheus::alertmanager' do
     it 'checks out alertmanager from github' do
       expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/alertmanager-0.14.0").with(
         repository: 'https://github.com/prometheus/alertmanager.git',
-        revision: '0.14.0'
+        revision: 'v0.14.0'
       )
     end
 
