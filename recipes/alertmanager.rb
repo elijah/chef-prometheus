@@ -122,7 +122,7 @@ when 'upstart'
   end
 else
   template '/etc/init.d/alertmanager' do
-    source 'alertmanager.init.erb'
+    source 'alertmanager.erb'
     owner 'root'
     group node['root_group']
     mode '0755'
@@ -132,7 +132,7 @@ end
 
 # rubocop:disable Style/HashSyntax
 service 'alertmanager' do
-  supports :status => true, :restart => true
+  supports :status => true, :restart => true, :reload => true
 end
 # rubocop:enable Style/HashSyntax
 

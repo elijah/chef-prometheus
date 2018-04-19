@@ -251,7 +251,7 @@ default['prometheus']['alertmanager']['checksum']                               
 default['prometheus']['alertmanager']['file_extension']                                   = ''
 
 # Alertmanager configuration file name.
-default['prometheus']['alertmanager']['config.file']                                      = "#{node['prometheus']['dir']}/alertmanager.conf"
+default['prometheus']['alertmanager']['config.file']                                      = "#{node['prometheus']['dir']}/alertmanager.yml"
 
 # Alertmanager configuration storage directory
 default['prometheus']['alertmanager']['storage.path']                                     = "#{node['prometheus']['dir']}/data"
@@ -262,7 +262,7 @@ default['prometheus']['alertmanager']['config_cookbook_name']                   
 # Alertmanager custom configuration cookbook.  Use this if you'd like to bypass the
 # default prometheus cookbook Alertmanager configuration template and implement your own
 # templates and recipes to configure Alertmanager.
-default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.conf.erb'
+default['prometheus']['alertmanager']['config_template_name']                             = 'alertmanager.yml.erb'
 
 # Array of alert rules filenames to be inserted in prometheus.yml.erb under "rule_files"
 default['prometheus']['rule_filenames']                                                   = nil

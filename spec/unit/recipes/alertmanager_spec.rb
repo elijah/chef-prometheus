@@ -49,7 +49,7 @@ describe 'prometheus::alertmanager' do
   end
 
   it 'renders a prometheus job configuration file and notifies prometheus to restart' do
-    resource = chef_run.template('/opt/prometheus/alertmanager.conf')
+    resource = chef_run.template('/opt/prometheus/alertmanager.yml')
     expect(resource).to notify('service[alertmanager]').to(:restart)
   end
 
