@@ -1,0 +1,93 @@
+driver:
+  name: dokken
+  privileged: true # because Docker and SystemD/Upstart
+  chef_version: 12.21.31
+  #chef_version: <%= ENV['CHEF_VERSION'] || 'current' %>
+
+transport:
+  name: dokken
+
+provisioner:
+  name: dokken
+  data_path: test/shared
+
+verifier:
+  sudo: false
+
+platforms:
+  - name: ubuntu-14.04
+  - name: ubuntu-16.04
+    driver:
+      image: dokken/ubuntu-16.04
+      pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt install sudo
+#  - name: debian-7.11
+#    driver:
+#      cache_directory: false
+  - name: debian-8.7
+    driver:
+      image: dokken/debian-8
+      pid_one_command: /bin/systemd
+  - name: centos-6.9
+    run_list:
+      - recipe[yum::default]
+  - name: centos-7.3
+    run_list:
+      - recipe[yum::default]
+
+suites:
+  - name: default
+    run_list:
+        - recipe[prometheus::default]
+        - recipe[prometheus::alertmanager]
+    attributes:
+      prometheus:
+        install_method: 'binary'
+        alertmanager:
+          install_method: 'binary'
+
+  - name: init-binary
+    run_list:
+        - recipe[prometheus::default]
+    attributes:
+      prometheus:
+        init_style: 'init'
+        install_method: 'binary'
+        flags:
+          storage.remote.timeout: 45s
+
+  - name: default-source
+    run_list:
+        - recipe[prometheus::default]
+    attributes:
+      go:
+        gobin: '/usr/local/go/bin'
+        gopath: '/usr/local/go'
+
+  - name: init
+    run_list:
+        - recipe[prometheus::default]
+    provisioner:
+        name: chef_zero
+        require_chef_omnibus: 11.12.4
+    attributes:
+      prometheus:
+        init_style: 'init'
+
+#  - name: bluepill
+#    run_list:
+#        - recipe[prometheus::default]
+#    attributes:
+#      prometheus:
+#        init_style: 'bluepill'
+
+#  - name: bluepill-binary
+#    run_list:
+#        - recipe[prometheus::default]
+#    attributes:
+#      prometheus:
+#        init_style: 'bluepill'
+#        install_method: 'binary'
+

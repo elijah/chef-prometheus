@@ -1,18 +1,24 @@
-rvm:
-  - 2.3.1
-  - 2.4.1
+dist: trusty
+sudo: required
+addons:
+  apt:
+    sources:
+      - chef-current-trusty
+    packages:
+      - chefdk
 
-bundler_args: --without development integration kitchen_docker kitchen_vagrant kitchen_cloud
+# Don't `bundle install`
+install: echo "skip bundle install"
 
-env:
-  - USE_SYSTEM_GECODE=1
+services: docker
 
-before_install:
-  - sudo apt-get -y -qq install libgecode-dev
-
-install:
-- bundle install
-- bundle exec berks install
+# Ensure we make ChefDK's Ruby the default
+before_script:
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
+  - eval "$(chef shell-init bash)"
+  - chef --version
 
 script:
-  - bundle exec rake travis:ci
+  - cookstyle
+  - foodcritic .
+  - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml chef exec kitchen verify
