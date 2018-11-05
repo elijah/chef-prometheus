@@ -163,6 +163,7 @@ default['prometheus']['flags']['storage.local.pedantic-checks']                 
 
 # How long to retain samples in the local storage.
 default['prometheus']['flags']['storage.local.retention']                                 = '360h0m0s'
+default['prometheus']['v2_cli_opts']['storage.tsdb.retention']                            = '15d'
 
 # When to sync series files after modification. Possible values:
 # 'never', 'always', 'adaptive'. Sync'ing slows down storage performance
