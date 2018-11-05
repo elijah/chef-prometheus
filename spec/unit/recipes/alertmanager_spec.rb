@@ -49,7 +49,7 @@ describe 'prometheus::alertmanager' do
   end
 
   it 'renders a prometheus job configuration file and notifies prometheus to restart' do
-    resource = chef_run.template('/opt/prometheus/alertmanager.conf')
+    resource = chef_run.template('/opt/prometheus/alertmanager.yml')
     expect(resource).to notify('service[alertmanager]').to(:restart)
   end
 
@@ -58,7 +58,7 @@ describe 'prometheus::alertmanager' do
   context 'source' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
-        node.set['prometheus']['alertmanager']['version'] = '0.6.2'
+        node.set['prometheus']['alertmanager']['version'] = '0.14.0'
         node.set['prometheus']['alertmanager']['install_method'] = 'source'
       end.converge(described_recipe)
     end
@@ -74,9 +74,9 @@ describe 'prometheus::alertmanager' do
     end
 
     it 'checks out alertmanager from github' do
-      expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/alertmanager-0.6.2").with(
+      expect(chef_run).to checkout_git("#{Chef::Config[:file_cache_path]}/alertmanager-0.14.0").with(
         repository: 'https://github.com/prometheus/alertmanager.git',
-        revision: '0.6.2'
+        revision: 'v0.14.0'
       )
     end
 
@@ -203,16 +203,16 @@ describe 'prometheus::alertmanager' do
   context 'binary' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04', file_cache_path: '/var/chef/cache') do |node|
-        node.set['prometheus']['alertmanager']['version'] = '0.6.2'
+        node.set['prometheus']['alertmanager']['version'] = '0.14.0'
         node.set['prometheus']['alertmanager']['install_method'] = 'binary'
       end.converge(described_recipe)
     end
 
     it 'runs ark with correct attributes' do
       expect(chef_run).to put_ark('prometheus').with(
-        url: 'https://github.com/prometheus/alertmanager/releases/download/v0.6.2/alertmanager-0.6.2.linux-amd64.tar.gz',
-        checksum: '8b796592b974a1aa51cac4e087071794989ecc957d4e90025d437b4f7cad214a',
-        version: '0.6.2',
+        url: 'https://github.com/prometheus/alertmanager/releases/download/v0.14.0/alertmanager-0.14.0.linux-amd64.tar.gz',
+        checksum: 'caddbbbe3ef8545c6cefb32f9a11207ae18dcc788e8d0fb19659d88c58d14b37',
+        version: '0.14.0',
         prefix_root: Chef::Config['file_cache_path'],
         path: '/opt',
         owner: 'prometheus',
