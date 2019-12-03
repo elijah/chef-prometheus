@@ -109,7 +109,7 @@ force_stop() {
 
 
 case "$1" in
-  force-start|start|stop|force-stop|restart)
+  force-start|start|stop|force-stop|restart|reload)
     trace "Attempting '$1' on prometheus"
     ;;
 esac
@@ -146,8 +146,13 @@ case "$1" in
 
     stop && start
     ;;
+  reload)
+    if status; then
+      /bin/kill -HUP $(cat "$pidfile")
+    fi
+    ;;
   *)
-    echo "Usage: $SCRIPTNAME {start|stop|force-start|force-stop|status|restart}" >&2
+    echo "Usage: $SCRIPTNAME {start|stop|force-start|force-stop|status|restart|reload}" >&2
     exit 3
   ;;
 esac
