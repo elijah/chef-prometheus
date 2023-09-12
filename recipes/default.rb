@@ -57,9 +57,14 @@ template node['prometheus']['flags']['config.file'] do
   mode      '0644'
   owner     node['prometheus']['user']
   group     node['prometheus']['group']
+
   variables(
-    rule_filenames: node['prometheus']['rule_filenames']
+    config: {
+      'global': node['prometheus']['global'],
+      'rule_files': node['prometheus']['rule_filenames'],
+    }
   )
+  
   notifies  :reload, 'service[prometheus]'
 end
 
